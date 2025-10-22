@@ -1,0 +1,62 @@
+/*!**************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[0].use[1]!./node_modules/sass-loader/dist/cjs.js!./assets/scss/theme/components/component_example.scss ***!
+  \**************************************************************************************************************************************************************************/
+/**
+ * Keep from smallest to biggest, each value is min px breakpoint
+ * - by this breakpoints most of utility classes will be generated, also it will
+ */
+/**
+ * Keep from smallest to biggest
+ * scaling value should be calculated of (current break point min / next breakpoint min)
+ */
+/** 
+ * use dynamic assign by breakpoints or assign your custom map of 
+ */
+/**
+ * Bootstrap like
+ */
+/**
+ * Tailwind like
+ */
+/**
+ * Directions will be prefixed
+ * so if prefix is "m" and providing "t" for top will be mt
+ * allowed directions are:
+ * ~ t -> top
+ * ~ r -> right
+ * ~ b -> bottom
+ * ~ l -> left
+ * ~ x -> left and right
+ * ~ y -> top and bottom
+ */
+/**
+ * Gutters value should be keept as an number cause it will be wrapped in val function for negative margins
+ */
+/**
+ * Columns values should contain unit if needed wrap in val to use native calculations
+ * - those values are are used for offset
+ */
+/* EXAMPLE */
+/* Font_directory:
+ * (
+		'class-name-for-family':
+ * 		(
+ * 			'src': FontFileName.extension, // or map like (FontFileName.extension, FontFileName2.otherExtension)
+ * 			'sans-serif': false, //added by default can be disabled
+ * 			'params':
+ * 			(
+ * 				'font-weight': 400,
+ * 				'font-style': 'italic',
+ * 				'font-stretch': 'condensed',
+ * 			)
+ * 		)
+ * )
+ */
+/**
+ * Pass single numeric value or map with named breakpoints: numeric value
+ *
+ * If map provided then can be specified default (as "default" or "value" key: numeric value
+ */
+.componentexample {
+  background-color: #ffffff;
+}

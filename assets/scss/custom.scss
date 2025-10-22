@@ -1,0 +1,360 @@
+@import "@rootScss/config.scss";
+@import "@rootScss/variables.scss";
+@import "@rootScss/functions.scss";
+
+///////////////////////////////////
+// #region base
+html {
+	overflow: -moz-scrollbars-vertical; 
+	overflow-y: scroll;
+}
+
+body {
+	// font-family: "Noto Sans", Arial, Helvetica, sans-serif;
+	font-family: Arial, Helvetica, sans-serif;
+	// font-stretch: semi-condensed;
+	font-size: 16rem;
+	background-color: color('white');
+	color: color('black');
+}
+
+.main-wrapper
+{
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+/**
+ * TEMP
+ */
+.js-bg-btn-under
+{
+	position: fixed;
+	bottom: 0;
+	right: 0;
+	background-color: blue;
+	width: 30rem;
+	height: 30rem;
+	z-index: 100000;
+}
+
+.js-bg-btn-above
+{
+	position: fixed;
+	bottom: 0;
+	right: 30rem;
+	background-color: red;
+	width: 30rem;
+	height: 30rem;
+	z-index: 100000;
+}
+
+.js-bg-under
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	width: 100%;
+	opacity: 0.6;
+	pointer-events: none;
+}
+
+.js-bg-above
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	width: 100%;
+	opacity: 0.6;
+	pointer-events: none;
+	z-index: 100000;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+// end of temp
+////////////////////////////////////////
+
+// #endregion base
+///////////////////////////////////
+
+///////////////////////////////////
+// #region Hamburger
+.js-hamburger {
+	width: 60px;
+	height: 45px;
+	position: absolute;
+	z-index: 10002;
+	-webkit-transform: rotate(0deg);
+	-moz-transform: rotate(0deg);
+	-o-transform: rotate(0deg);
+	transform: rotate(0deg);
+	-webkit-transition: 0.5s ease-in-out;
+	-moz-transition: 0.5s ease-in-out;
+	-o-transition: 0.5s ease-in-out;
+	transition: 0.5s ease-in-out;
+	cursor: pointer;
+	top: 24rem;
+	right: 6rem;
+	display: none;
+
+	@media (max-width: 575.98px) {
+		display: block;
+		top: 14rem;
+		right: 12rem;
+		transform: scale(0.6);
+	}
+}
+
+.js-hamburger span {
+	display: block;
+	position: absolute;
+	height: 9px;
+	width: 100%;
+	background: #ffffff;
+	border-radius: 9px;
+	opacity: 1;
+	left: 0;
+	-webkit-transform: rotate(0deg);
+	-moz-transform: rotate(0deg);
+	-o-transform: rotate(0deg);
+	transform: rotate(0deg);
+	-webkit-transition: 0.25s ease-in-out;
+	-moz-transition: 0.25s ease-in-out;
+	-o-transition: 0.25s ease-in-out;
+	transition: 0.25s ease-in-out;
+}
+
+.js-hamburger span:nth-child(1) {
+	top: 0px;
+	-webkit-transform-origin: left center;
+	-moz-transform-origin: left center;
+	-o-transform-origin: left center;
+	transform-origin: left center;
+}
+
+.js-hamburger span:nth-child(2) {
+	top: 18px;
+	-webkit-transform-origin: left center;
+	-moz-transform-origin: left center;
+	-o-transform-origin: left center;
+	transform-origin: left center;
+}
+
+.js-hamburger span:nth-child(3) {
+	top: 36px;
+	-webkit-transform-origin: left center;
+	-moz-transform-origin: left center;
+	-o-transform-origin: left center;
+	transform-origin: left center;
+}
+
+.js-hamburger.active span:nth-child(1) {
+	-webkit-transform: rotate(45deg);
+	-moz-transform: rotate(45deg);
+	-o-transform: rotate(45deg);
+	transform: rotate(45deg);
+	top: -3px;
+	left: 8px;
+}
+
+.js-hamburger.active span:nth-child(2) {
+	width: 0%;
+	opacity: 0;
+}
+
+.js-hamburger.active span:nth-child(3) {
+	-webkit-transform: rotate(-45deg);
+	-moz-transform: rotate(-45deg);
+	-o-transform: rotate(-45deg);
+	transform: rotate(-45deg);
+	top: 39px;
+	left: 8px;
+}
+
+.header.active {
+	.js-hamburger {
+		position: fixed;
+	}
+}
+
+.js-hamburger.active
+{
+	span
+	{
+		background-color: color('black');
+	}
+}
+
+.js-hamburger.active + .header__links
+{
+	@media(max-width: 575.98px)
+	{
+		transform: translateX(0%);
+	}
+}
+
+// #endregion Hamburger
+///////////////////////////////////
+
+///////////////////////////////////
+//#region scrollbar
+/* For webkit browsers (like Safari) */
+*::-webkit-scrollbar {
+	width: 0px;
+	background: transparent; /* Make scrollbar invisible */
+}
+
+.os-scrollbar-vertical {
+	width: 12rem;
+	padding: 12rem 0;
+	right: 6rem;
+
+	@media(max-width: 575.98px) {
+		width: 6rem;
+	}
+
+	.os-scrollbar-track {
+		background-color: rgba(color('black'), 0.32);
+		transition: background-color .2s linear, opacity 0.2s linear;
+
+		&:hover {
+			background-color: rgba(color('white'), 1);
+		}
+	}
+
+	.os-scrollbar-handle {
+		background-color: rgba(color('black'), 0.69);
+		cursor: pointer;
+
+		&:hover {
+			background-color: rgba(color('black'), 0.8);
+		}
+	}
+}
+// #endregion scrollbar
+///////////////////////////////////
+
+.text
+{
+	font-size: 18rem;
+	line-height: 24rem;
+}
+
+* + .h1,
+* + .h2,
+* + .h3,
+* + .h4
+{
+	margin-top: 28rem;
+
+	@media(max-width: 575.98px) {
+		margin-top: 16rem;
+	}
+}
+
+.h1
+{
+	font-size: 50rem;
+	line-height: 61rem;
+	letter-spacing: 0.03em;
+	font-weight: 300;
+
+	@media(max-width: 575.98px) {
+		font-size: 26rem;
+		line-height: 36rem;
+	}
+}
+
+.h2
+{
+	font-size: 36rem;
+	line-height: 48rem;
+	font-weight: 500;
+
+	@media(max-width: 575.98px) {
+		font-size: 24rem;
+		line-height: 34rem;
+	}
+}
+
+.h3
+{
+	font-size: 30rem;
+	line-height: 42rem;
+	font-weight: 500;
+	letter-spacing: 0.03em;
+
+	@media(max-width: 575.98px) {
+		font-size: 22rem;
+		line-height: 32rem;
+	}
+}
+
+.h4
+{
+	font-size: 20rem;
+	line-height: 27rem;
+	font-weight: 600;
+}
+
+.wyswig
+{
+	@extend .text;
+
+	h1
+	{
+		@extend .h1;
+	}
+
+	h2
+	{
+		@extend .h2;
+	}
+
+	h3
+	{
+		@extend .h3;
+	}
+
+	h4
+	{
+		@extend .h4;
+	}
+
+	* + p
+	{
+		margin-top: 1em;
+	}
+
+	// Nesting fix
+	.text
+	{
+		@extend .text;
+	}
+
+	.h1
+	{
+		@extend .h1;
+	}
+
+	.h2
+	{
+		@extend .h2;
+	}
+
+	.h3
+	{
+		@extend .h3;
+	}
+
+	.h4
+	{
+		@extend .h4;
+	}
+}

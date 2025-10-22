@@ -1,0 +1,17 @@
+@function getVendorPath($plugin)
+{
+	@return $plugin;
+}
+
+@mixin importVendors()
+{
+	@each $plugin in $vendor
+	{
+		@import url($plugin);
+	}
+}
+
+@if $configVendors
+{
+	@include importVendors();
+}

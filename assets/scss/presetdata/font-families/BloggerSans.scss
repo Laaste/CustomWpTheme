@@ -1,0 +1,133 @@
+// $familyBloggerSans:
+// (
+// 	'Blogger Sans':
+// 	(
+// 		'blogger-light':
+// 		(
+// 			'src': 'OT-tt/Blogger Sans-Light.ttf',
+// 			'params':
+// 			(
+// 				'font-weight': 300,
+// 				'font-style': 'normal'
+// 			)
+// 		),
+// 		'blogger-light-it':
+// 		(
+// 			'src': 'OT-tt/Blogger Sans-Light Italic.ttf',
+// 			'params':
+// 			(
+// 				'font-weight': 300,
+// 				'font-style': 'italic'
+// 			)
+// 		),
+// 		'blogger':
+// 		(
+// 			'src': 'OT-tt/Blogger Sans.ttf',
+// 			'params':
+// 			(
+// 				'font-weight': 400,
+// 				'font-style': 'normal'
+// 			)
+// 		),
+// 		'blogger-it':
+// 		(
+// 			'src': 'OT-tt/Blogger Sans-Italic.ttf',
+// 			'params':
+// 			(
+// 				'font-weight': 400,
+// 				'font-style': 'italic'
+// 			)
+// 		),
+// 		'blogger-medium':
+// 		(
+// 			'src': 'OT-tt/Blogger Sans-Medium.ttf',
+// 			'params':
+// 			(
+// 				'font-weight': 500,
+// 				'font-style': 'normal'
+// 			)
+// 		),
+// 		'blogger-medium-it':
+// 		(
+// 			'src': 'OT-tt/Blogger Sans-Medium Italic.ttf',
+// 			'params':
+// 			(
+// 				'font-weight': 500,
+// 				'font-style': 'italic'
+// 			)
+// 		),
+// 		'blogger-bold':
+// 		(
+// 			'src': 'OT-tt/Blogger Sans-Bold.ttf',
+// 			'params':
+// 			(
+// 				'font-weight': 700,
+// 				'font-style': 'normal'
+// 			)
+// 		),
+// 		'blogger-bold-it':
+// 		(
+// 			'src': 'OT-tt/Blogger Sans-Bold Italic.ttf',
+// 			'params':
+// 			(
+// 				'font-weight': 700,
+// 				'font-style': 'italic'
+// 			)
+// 		)
+// 	),
+// );
+
+$familyBloggerSans:
+(
+	'Blogger Sans':
+	(
+		'blogger-sans-light':
+		(
+			'src': 'BloggerSans-Light.ttf', // or map like (FontFileName.extension, FontFileName2.otherExtension)
+			'sans-serif': false,
+			'params':
+			(
+				'font-weight': 300,
+				'font-style': 'normal',
+				'font-display': 'swap',
+				'text-rendering': 'optimizeLegibility',
+			)
+		),
+		'blogger-sans':
+		(
+			'src': 'BloggerSans.ttf', // or map like (FontFileName.extension, FontFileName2.otherExtension)
+			'sans-serif': false,
+			'params':
+			(
+				'font-weight': 400,
+				'font-style': 'normal',
+				'font-display': 'swap',
+				'text-rendering': 'optimizeLegibility',
+			)
+		),
+		'blogger-sans-medium':
+		(
+			'src': 'BloggerSans-Medium.ttf', // or map like (FontFileName.extension, FontFileName2.otherExtension)
+			'sans-serif': false,
+			'params':
+			(
+				'font-weight': 500,
+				'font-style': 'normal',
+				'font-display': 'swap',
+				'text-rendering': 'optimizeLegibility',
+			)
+		),
+		'blogger-sans-bold':
+		(
+			'src': 'BloggerSans-Bold.ttf', // or map like (FontFileName.extension, FontFileName2.otherExtension)
+			'sans-serif': false,
+			'params':
+			(
+				'font-weight': 700,
+				'font-style': 'normal',
+				'font-display': 'swap',
+				'text-rendering': 'optimizeLegibility',
+			)
+		),
+	)
+);
