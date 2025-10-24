@@ -87,7 +87,6 @@ function getCssPathForTemplate()
 	$cssFileUrl = getTemplateCssPath($currentTemplate, true, true);
 	$cssFilePath = getTemplateCssPath($currentTemplate, false, true);
 
-
 	// Check if the .min.css file exists
 	if(file_exists($cssFilePath))
 	{
