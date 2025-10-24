@@ -491,7 +491,7 @@ $(function()
 
 var menuOpen = false;
 
-$(document).on('click', '.js-scroll', function (e)
+$(document).on('click', '.js-hamburger', function (e)
 {
 	menuOpen = !menuOpen;
 
@@ -1266,6 +1266,11 @@ function processScroll()
 	{
 		var tmpEl = $(element);
 
+		if(tmpEl.css('background-image') !== 'none')
+		{
+			return; // pomiń ten element
+		}
+
 		if(offsetTop + (windowHeight * 1.5) > element.getBoundingClientRect().top)
 		{
 			tmpEl.css('background-image', 'url(' + tmpEl.attr(lazyBgAttr) + ')');
@@ -1321,6 +1326,11 @@ function processLazyImgScroll()
 	$.each(dataLazyImgArray, function(index, element)
 	{
 		var tmpEl = $(element);
+
+		if(tmpEl.attr('src') && tmpEl.attr('src') !== '')
+		{
+			return false;
+		}
 
 		if(offsetTop + (windowHeight * 1.5) > element.getBoundingClientRect().top)
 		{
