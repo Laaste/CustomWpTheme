@@ -12,7 +12,6 @@ $currentLang = apply_filters( 'wpml_current_language', NULL);
 				</div>
 
 				<div class="footer__bottom">
-					</div>
 				</div>
 			</footer>
 		</div>
