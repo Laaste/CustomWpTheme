@@ -25,12 +25,12 @@ $fontSizes = [
 
 	<?= wp_head(); ?>
 
-	<link rel="icon" type="image/png" href="<?= get_template_directory_uri(); ?>/assets/favicon/favicon-96x96.png" sizes="96x96" />
-	<link rel="icon" type="image/svg+xml" href="<?= get_template_directory_uri(); ?>/assets/favicon/favicon.svg" />
-	<link rel="shortcut icon" href="<?= get_template_directory_uri(); ?>/assets/favicon/favicon.ico" />
-	<link rel="apple-touch-icon" sizes="180x180" href="<?= get_template_directory_uri(); ?>/assets/favicon/apple-touch-icon.png" />
+	<link rel="icon" type="image/png" href="<?= get_template_directory_uri(); ?>/assets/images/favicon/favicon-96x96.png" sizes="96x96" />
+	<link rel="icon" type="image/svg+xml" href="<?= get_template_directory_uri(); ?>/assets/images/favicon/favicon.svg" />
+	<link rel="shortcut icon" href="<?= get_template_directory_uri(); ?>/assets/images/favicon/favicon.ico" />
+	<link rel="apple-touch-icon" sizes="180x180" href="<?= get_template_directory_uri(); ?>/assets/images/favicon/apple-touch-icon.png" />
 	<meta name="apple-mobile-web-app-title" content="<?= get_bloginfo('name'); ?>" />
-	<link rel="manifest" href="<?= get_template_directory_uri(); ?>/assets/favicon/site.webmanifest" crossorigin="use-credentials">
+	<link rel="manifest" href="<?= get_template_directory_uri(); ?>/assets/images/favicon/site.webmanifest" crossorigin="use-credentials">
 
 	<link rel="stylesheet" href="<?= get_template_directory_uri(); ?>/assets/css/styles.css">
 </head>
