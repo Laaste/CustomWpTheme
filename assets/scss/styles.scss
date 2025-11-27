@@ -35,12 +35,6 @@
 	}
 }
 
-// Custom function to multiply font-size by variable --fontsize in root for feature that allows web user to scale up text
-@function inc($valueWithUnit)
-{
-	@return unquote('calc(#{$valueWithUnit} * (var(--fontsize) / 100))');
-}
-
 @import '@rootScss/normalize.scss';
 @import '@rootScss/variables.scss';
 @import '@rootScss/custom.scss';
