@@ -8,66 +8,75 @@ const WatchComponentsPlugin = require('./watch-components-plugin');
 
 module.exports = (env) =>
 {
-	const watch = (env.watch == 'true') ? true : false;
+	const watch = env.watch == 'true';
 
-	// Use glob patter to include nested SCSS files to make new composable.css file which includes all components scss for modular pages that require them all
-	const componentFiles = glob.sync(path.resolve(__dirname, 'assets/scss/theme/components/**/*.scss').replace(/\\/g, '/'));
+	// --- GENERUJ COMPOSABLE.SCSS ---
+	const componentsFolder = path.resolve(__dirname, 'assets/scss/theme/components');
+	const composableFile = path.resolve(__dirname, 'assets/scss/composable.scss');
 
-	let composableData = '// THIS FILE IS AUTOUPDATED DON\'t PUT ANY CONTENT IN IT\n'; //Note to warn to dont manually edit composable.scss
-	composableData = composableData + componentFiles
-	.map(file =>
-	{
-		const relativePath = path.relative(path.resolve(__dirname, 'assets/scss'), file).replace(/\\/g, '/');
+	function generateComposable() {
+		const componentFiles = glob.sync(`${componentsFolder}/**/*.scss`).map(f => f.replace(/\\/g, '/'));
+		let composableData = '// THIS FILE IS AUTOUPDATED, DON\'T EDIT MANUALLY\n';
+		composableData += componentFiles.map(f => {
+			const relative = path.relative(path.resolve(__dirname, 'assets/scss'), f).replace(/\\/g, '/');
+			return `@use './${relative}';`;
+		}).join('\n');
+		fs.writeFileSync(composableFile, composableData);
+	}
 
-		return `@use './${relativePath}';`;
-	})
-	.join('\n');
+	generateComposable();
 
-	fs.writeFileSync(path.resolve(__dirname, 'assets/scss/composable.scss'), composableData);
+	// --- GENERUJ TEMPLATES.SCSS ---
+	const templatesFolder = path.resolve(__dirname, 'assets/scss/theme/templates');
+	const templatesIndex = path.resolve(__dirname, 'assets/scss/templates.scss');
 
-	// Use glob pattern to include nested SCSS files for templates wordpress like
-	const templateFiles = glob.sync(path.resolve(__dirname, 'assets/scss/theme/**/*.scss').replace(/\\/g, '/'));
+	function generateTemplatesIndex() {
+		const templateFiles = glob.sync(`${templatesFolder}/**/*.scss`).map(f => f.replace(/\\/g, '/'));
+		let templateContent = '// AUTO GENERATED\n';
+		templateContent += templateFiles.map(f => {
+			const relative = path.relative(path.resolve(__dirname, 'assets/scss'), f).replace(/\\/g, '/');
+			return `@use './${relative}';`;
+		}).join('\n');
+		fs.writeFileSync(templatesIndex, templateContent);
+	}
 
-	const templateEntries = templateFiles.reduce((entries, file) =>
-	{
-		// Create relative path for nested files
-		const relativePath = path.relative(path.resolve(__dirname, 'assets/scss'), file);
-		const name = relativePath.replace(/\.scss$/, '');
-		entries[`css/${name}`] = file.replace(/\\/g, '/');
+	generateTemplatesIndex();
 
-		return entries;
-	}, {});
+	// --- WATCH NA FOLDERACH ---
+	if (watch) {
+		// Watch components
+		fs.watch(componentsFolder, { recursive: true }, (eventType, filename) => {
+			if (filename && filename.endsWith('.scss')) generateComposable();
+		});
+		// Watch templates
+		fs.watch(templatesFolder, { recursive: true }, (eventType, filename) => {
+			if (filename && filename.endsWith('.scss')) generateTemplatesIndex();
+		});
+	}
 
 	return {
 		mode: env.mode,
-		resolve:
-		{
+		resolve: {
 			alias: {
 				'@rootScss': path.resolve(__dirname, 'assets/scss'),
-				'@templatesScss': path.resolve(__dirname, 'assets/scss/theme/templates'),
-				'@componentsScss': path.resolve(__dirname, 'assets/scss/theme/components'),
+				'@templatesScss': templatesFolder,
+				'@componentsScss': componentsFolder,
 			},
-			extensions: [
-				'.js',
-				'.css',
-				'.scss'
-			]
+			extensions: ['.js', '.css', '.scss']
 		},
 		entry: {
 			'js/main-compiled': path.resolve(__dirname, 'assets/js/main.js'),
 			'css/styles': path.resolve(__dirname, 'assets/scss/styles.scss'),
-			'css/composable': path.resolve(__dirname, 'assets/scss/composable.scss'),
-			...templateEntries
+			'css/composable': composableFile,
+			'css/templates': templatesIndex
 		},
 		output: {
-			path: path.resolve(__dirname, 'assets/'),
+			path: path.resolve(__dirname, 'assets/')
 		},
 		plugins: [
 			new FixStyleOnlyEntriesPlugin(),
-			new MiniCssExtractPlugin({
-				filename: '[name].css'
-			}),
-			new WatchComponentsPlugin(componentFiles) // create composable when any component get compiled
+			new MiniCssExtractPlugin({ filename: '[name].css' }),
+			new WatchComponentsPlugin([componentsFolder])
 		],
 		watch: watch,
 		module: {
@@ -76,16 +85,11 @@ module.exports = (env) =>
 					test: /\.(scss|css)$/,
 					use: [
 						MiniCssExtractPlugin.loader,
-						{
-							loader: 'css-loader',
-							options: {
-								url: false
-							}
-						},
+						{ loader: 'css-loader', options: { url: false } },
 						'sass-loader'
 					]
 				}
 			]
 		}
-	}
-}
+	};
+};
