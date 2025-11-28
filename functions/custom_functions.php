@@ -510,11 +510,11 @@ function pageRedirect($currentId)
 
 	if($activeRedirect)
 	{
-		$redirectObj = get_field('page_redirect', $currentId);
+		$redirectObjID = get_field('page_redirect', $currentId);
 
-		if($redirectObj)
+		if($redirectObjID)
 		{
-			$redirectLink = get_permalink($redirectObj->ID);
+			$redirectLink = get_permalink($redirectObjID);
 
 			header('Location: ' . $redirectLink, true, 302);
 
