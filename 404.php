@@ -16,8 +16,8 @@ pageRedirect($currentId);
 	</h2>
 
 	<div class="four-o-four__button">
-		<a href="<?= $siteUrl; ?>" class="button">
-			<?= __("Home page", 'customtheme'); ?>
+		<a href="<?= $siteUrl; ?>" class="button" aria-label="<?= __('Homepage', 'customtheme'); ?>">
+			<?= __("Homepage", 'customtheme'); ?>
 		</a>
 	</div>
 </section>

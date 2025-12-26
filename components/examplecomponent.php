@@ -8,6 +8,6 @@ if(isset($args)
 $exapleFieldOfComposableSection = get_sub_field('section_examplefield', $currentId);
 ?>
 
-<section class="examplecomponent"  id="<?= !empty($sectionNo) ? 'section-' . $sectionNo : 'examplecomponent'; ?>">
-	
+<section class="examplecomponent"  id="<?= !empty($sectionNo) ? 'section-' . $sectionNo : 'examplecomponent'; ?>" <?= (isset($sectionNo)) ? "data-section-no='$sectionNo'" : "" ?>>
+
 </section>

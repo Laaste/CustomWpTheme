@@ -1,24 +1,21 @@
 <?php
 $pathToColors = asset('scss/variables/colors.scss', false);
 
-function parseScssColors($filePath)
+function parseScssColors($filePath = '')
 {
 	$colors = [];
 
 	if(file_exists($filePath))
 	{
-		$scssContent = file_get_contents($filePath);
+		$scss = file_get_contents($filePath);
 
-		preg_match_all("/'([^']+)'\s*:\s*(#[0-9A-Fa-f]{6})\s*,?/", $scssContent, $matches);
+		preg_match_all('/"([^"]+)"\s*:\s*(#[0-9A-Fa-f]{3,6}|[a-zA-Z]+)\s*,?/', $scss, $matches);
 
-		if(isset($matches[1]) && isset($matches[2]))
+		if(!empty($matches[1]))
 		{
-			$colorNames = $matches[1];
-			$colorValues = $matches[2];
-
-			foreach($colorNames as $index => $name)
+			foreach($matches[1] as $i => $name)
 			{
-				$colors[$name] = $colorValues[$index];
+				$colors[$name] = $matches[2][$i]; // hex albo transparent
 			}
 		}
 	}

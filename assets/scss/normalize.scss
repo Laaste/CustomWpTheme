@@ -100,6 +100,14 @@ $configNormalize: true !default;
 		border: none;
 	}
 
+	blockquote
+	{
+		margin-block-start: 0rem;
+		margin-block-end: 0rem;
+		margin-inline-start: 0rem;
+		margin-inline-end: 0rem;
+	}
+
 	///////////////////////////////
 	/// Fix wordpressbar
 	body.admin-bar {
@@ -117,6 +125,11 @@ $configNormalize: true !default;
 
 	#wpadminbar.hidden {
 		transform: translateY(-100%);
+	}
+
+	.cursor-pointer
+	{
+		cursor: pointer;
 	}
 }
 

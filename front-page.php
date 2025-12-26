@@ -8,4 +8,5 @@ pageRedirect($currentId);
 
 <?php linkCssForTemplate(); ?>
 
+<?php composableSections($currentId, []); ?>
 <?php get_footer(); ?>

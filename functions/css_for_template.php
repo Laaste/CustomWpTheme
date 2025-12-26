@@ -143,7 +143,10 @@ function theme_enqueue_template_styles()
 }
 add_action('wp_enqueue_scripts', 'theme_enqueue_template_styles');
 
-function composableSections($currentId)
+/**
+ * @param $paramsForSections - Example ['section-name' => [this array gona spread to section args]]
+ */
+function composableSections($currentId, $paramsForSections = [])
 {
 	if(have_rows('composable', $currentId))
 	{
@@ -159,9 +162,12 @@ function composableSections($currentId)
 			{
 				$sectionNo++;
 
+				$sectionArgs = $paramsForSections[$layout] ?? [];
+
 				get_template_part("components/$layout", null, [
 					'currentId' => $currentId,
 					'sectionNo' => $sectionNo,
+					...$sectionArgs,
 				]);
 			}
 		}

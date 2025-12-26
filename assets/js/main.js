@@ -535,7 +535,7 @@ $(document).on('click', '.js-scroll', function (e){
 	} else {
 		setCookie('scrollTo', target, 1);
 		setTimeout(function(e){
-			window.location.href = siteUrl;
+			window.location.href = baseUrl;
 		}, 100);
 	}
 
@@ -558,10 +558,11 @@ $(document).on('click', '.js-scroll', function (e){
  * 
  * @data-target {string} selector of the target element (e.g., ".class", "#id", "tag")
  * @data-nesting {string} optional, defines the search scope relative to the current element:
- *                          "inner"   - inside the current element
- *                          "above"   - in parent elements
- *                          "sibling" - in following siblings (default)
- *                          "prev"    - in previous siblings
+ *      "inner"   - inside the current element
+ *      "above"   - in parent elements
+ *      "sibling" - in following siblings (default)
+ *      "prev"    - in previous siblings
+ *      "exact"   - search in dom for first occurent
  */
 $('.js-scroll-to-next').on('click', function(e)
 {
@@ -589,6 +590,9 @@ $('.js-scroll-to-next').on('click', function(e)
 			break;
 		case 'prev':
 			targetEl = that.prevAll(selector).first();
+			break;
+		case 'exact':
+			targetEl = $(selector).first();
 			break;
 		default:
 			targetEl = that.nextAll(selector).first();
@@ -778,7 +782,6 @@ $(document).on('click', '.js-close-target', function(e)
 	}
 });
 
-// otwieranie
 $(document).on('click', '.js-open-target', function(e)
 {
 	var that = $(this);
@@ -806,22 +809,23 @@ $(document).on('click', '.js-open-target', function(e)
 	}
 });
 
+// #region cslSelect
 /**
  * Custom select with search on options list
  */
-
-$('.js-csl-container').on('click', function(e)
+$(document).on('click', '.js-csl-container', function(e)
 {
 	var that = $(this);
 
-	var allowPropagation = that.attr('data-allow-propagation');
-
-	if(allowPropagation !== 'true')
+	if(that.attr('data-prevent-default') != "false")
 	{
 		e.preventDefault();
-		e.stopPropagation();
 	}
 
+	if(that.attr('data-stop-propagation') != "false")
+	{
+		e.stopPropagation();
+	}
 
 	var that = $(this);
 
@@ -829,53 +833,128 @@ $('.js-csl-container').on('click', function(e)
 	cslHightlightMatches(that);
 });
 
-$('.js-csl-option').on('click', function(e)
+$(document).on('click', '.js-csl-option', function(e)
 {
 	e.preventDefault();
 	e.stopPropagation();
 
 	var that = $(this);
 
-	var container = that.closest('.js-csl-container');
+	var customClick = that.attr('data-custom-click');
 
-	var input = container.find('.js-csl-current');
-
-	var text = that.text().trim();
-	var value = that.attr('data-value');
-
-	if(input.is('input'))
+	if(customClick !== "true"
+	&& customClick !== true)
 	{
-		input.val(text);
+		cslOption(that);
+	}
+});
+
+function cslOption(that)
+{
+	var container = that.closest('.js-csl-container');
+	var value = that.attr('data-value');
+	var isMulti = container.attr('data-multiselect') === 'true';
+	var checkbox = that.find('input[type="checkbox"]');
+
+	var selectedValues = JSON.parse(container.attr('data-selected-values') || '[]');
+
+	if(! isMulti)
+	{
+		container.find('.js-csl-option.selected').each(function()
+		{
+			var prev = $(this);
+
+			if(prev[0] !== that[0])
+			{
+				prev.removeClass('selected');
+				prev.find('input[type="checkbox"]').prop('checked', false);
+				selectedValues = selectedValues.filter(v => v !== prev.attr('data-value'));
+			}
+		});
+	}
+
+	// Toggle currne option
+	if(selectedValues.includes(value))
+	{
+		selectedValues = selectedValues.filter(v => v !== value);
+		that.removeClass('selected');
+		checkbox.prop('checked', false);
 	}
 	else
 	{
-		input.html(text);
+		selectedValues = isMulti ? [...selectedValues, value] : [value];
+		that.addClass('selected');
+		checkbox.prop('checked', true);
 	}
 
-	input.attr('data-value', value);
+	container.attr('data-selected-values', JSON.stringify(selectedValues));
 
-	cslCloseOptions(container);
-});
+	cslUpdateCurrent(container);
 
-$('.js-csl-current').on('input', function(e)
+	if(!isMulti) cslCloseOptions(container);
+}
+
+$(document).on('input', '.js-csl-current', function(e)
 {
 	e.preventDefault();
 	e.stopPropagation();
 
 	var that = $(this);
-
 	var container = that.closest('.js-csl-container');
-
 	var value = that.val();
 
 	if(! value
 	|| value.length == 0)
 	{
-		that.attr('data-value', 'default');
+		that.attr('data-value', JSON.stringify(['default']));
 	}
 
 	cslHightlightMatches(container);
 });
+
+function cslUpdateCurrent($container)
+{
+	var $input = $container.find('.js-csl-current');
+	var defaultLabel = $input.attr('data-default-label') || 'Wybierz';
+	var selectedValues = JSON.parse($container.attr('data-selected-values') || '[]');
+	
+	if(selectedValues.length === 0)
+	{
+		$input.html(defaultLabel);
+		$input.removeClass('choosed');
+		$input.attr('data-value', '[]');
+	}
+	else
+	{
+		var labels = selectedValues.map(function(v)
+		{
+			var $option = $container.find(`.js-csl-option[data-value="${v}"]`)
+			var optionLabel = $option.attr('data-label');
+
+			if(optionLabel === undefined
+			|| ! optionLabel.trim().length)
+			{
+				optionLabel = $option.text();
+			}
+
+			return optionLabel.trim();
+		});
+
+		//If declared then assing values to it too
+		var valueTargetSelector = $container.attr('data-value-target');
+
+		if(valueTargetSelector
+		&& valueTargetSelector.length)
+		{
+			var valueTarget = $container.find(valueTargetSelector);
+			valueTarget.val(selectedValues.join(', '));
+		}
+		
+		$input.html(labels.join(', '));
+		$input.addClass('choosed');
+		$input.attr('data-value', JSON.stringify(selectedValues));
+	}
+}
 
 function cslHightlightMatches(container, search)
 {
@@ -887,10 +966,7 @@ function cslHightlightMatches(container, search)
 	}
 
 	var search = input.val().trim().toLowerCase();
-
 	var options = container.find('.js-csl-option');
-
-	var anyOptionMatched = false;
 
 	if(options.length
 	&& search.length)
@@ -901,17 +977,7 @@ function cslHightlightMatches(container, search)
 			var optionText = option.text().trim().toLowerCase();
 			var optionWords = optionText.split(' ');
 
-			var anyWordMatch = false;
-
-			optionWords.forEach(word =>
-			{
-				if(word.startsWith(search)
-				&& search.length)
-				{
-					anyWordMatch = true;
-					anyOptionMatched = true;
-				}
-			});
+			var anyWordMatch = optionWords.some(word => word.startsWith(search) && search.length);
 
 			if(anyWordMatch)
 			{
@@ -957,6 +1023,7 @@ function cslOpenOptions(container)
 		container.addClass('active');
 	}
 }
+
 function cslCloseOptions(container)
 {
 	if(container.length)
@@ -991,6 +1058,7 @@ $(document).on("click", function(event)
 	});
 });
 
+//#endregion cslSelect
 ////////////////////////////////
 
 function addToBodyClassWithSuffix(baseClass, suffix)
@@ -1186,7 +1254,6 @@ $(function()
 
 // function refreshSlicks()
 // {
-// 	console.log(sliders);
 // 	sliders.forEach(function($sliderType)
 // 	{
 // 		if($sliderType.length)

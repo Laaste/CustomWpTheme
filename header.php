@@ -1,7 +1,7 @@
 <?php
 $siteUrl = site_url();
 $currentId = currentID();
-$currentLang = apply_filters( 'wpml_current_language', NULL); //wpml
+$currentLang = apply_filters('wpml_current_language', NULL); //wpml
 
 get_header();
 

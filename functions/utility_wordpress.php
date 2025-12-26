@@ -52,69 +52,32 @@ function currentID()
 
 function getMenuItems($location)
 {
-	$menus = wp_get_nav_menus();
 	$menuLocations = get_nav_menu_locations();
 
-	if(isset($menuLocations[$location])
-	&& $menuLocations[$location] != 0)
-	{
-		$menuID = null;
-		$menuPostType = 'nav_menu';
+	if(!isset($menuLocations[$location])) return [];
 
-		if(function_exists('wpml_object_id_filter'))
-		{
-			$menuID = wpml_object_id_filter($menuLocations[$location], $menuPostType, false);
-		}
-		else
-		{
-			$menuID = $menuLocations[$location]; // Fallback to default
-		}
+	$menuID = $menuLocations[$location];
 
-		foreach($menus as $menu)
-		{
-			if($menu->term_id == $menuID)
-			{
-				$menuItems = wp_get_nav_menu_items($menu);
+	$menuItems = wp_get_nav_menu_items($menuID);
+	if(!$menuItems) return [];
 
-				if(! $menuItems) 
-				{
-					return [];
-				}
-
-				$nestedMenuItems = buildMenuTree($menuItems);
-
-				return $nestedMenuItems;
-			}
-		}
-	}
-
-	return [];
+	return buildMenuTree($menuItems);
 }
 
 function buildMenuTree($menuItems, $parent_id = 0)
 {
-	$tree = [];
+	$branch = [];
 
-	foreach($menuItems as $menuItem)
+	foreach($menuItems as $item)
 	{
-		if($menuItem->menu_item_parent == $parent_id)
+		if(intval($item->menu_item_parent) === intval($parent_id))
 		{
-			$children = buildMenuTree($menuItems, $menuItem->ID);
-
-			if(!empty($children))
-			{
-				$menuItem->children = $children;
-			}
-			else
-			{
-				$menuItem->children = [];
-			}
-
-			$tree[] = $menuItem;
+			$item->children = buildMenuTree($menuItems, $item->ID);
+			$branch[] = $item;
 		}
 	}
 
-	return $tree;
+	return $branch;
 }
 
 function getUploadsUrl($restOfUrl = '')
@@ -737,4 +700,23 @@ function getPostsCount($args = [])
 
 	$query = new WP_Query($getModelsCountArgs);
 	return $query->found_posts;
+}
+
+function getPostThumbnailAlt($postId)
+{
+	$thumbnailId = get_post_thumbnail_id($postId);
+
+	if(! $thumbnailId)
+	{
+		return '';
+	}
+
+	$alt = get_post_meta($thumbnailId, '_wp_attachment_image_alt', true);
+
+	if(!empty($alt))
+	{
+		return $alt;
+	}
+
+	return '';
 }

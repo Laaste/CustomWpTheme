@@ -1,4 +1,12 @@
 <?php
+function echoAjaxUrlInFooter()
+{
+	$ajaxUrl = admin_url('admin-ajax.php');
+
+	echo "<script type='text/javascript'>var ajaxUrl = '{$ajaxUrl}';</script>";
+}
+add_action('wp_head', 'echoAjaxUrlInFooter');
+
 // function regiterSubscriber()
 // {
 // 	global $wpdb;
