@@ -135,54 +135,26 @@ function acfLinkUrl($alias)
 	return $link;
 }
 
-function acfGetRepeaterItems($mainField, $acfIdent, $taxonomy = '', $keyMode = 'name', $formatValue = true)
+function acfGetRepeaterItems($mainField, $acfIdent)
 {
 	$items = [];
 
-	if(!empty($taxonomy))
-	{
-		$acfIdent = $taxonomy . '_' . $acfIdent;
-	}
-
 	if(have_rows($mainField, $acfIdent))
 	{
+		$repeater_field = get_field_object($mainField, $acfIdent);
+		if(!$repeater_field || empty($repeater_field['sub_fields'])) return $items;
+
 		while(have_rows($mainField, $acfIdent))
 		{
 			the_row();
 
 			$item = [];
-			$subFields = get_sub_field_objects($formatValue, $acfIdent);
 
-			if(is_array($subFields))
+			foreach($repeater_field['sub_fields'] as $sub_field)
 			{
-				foreach($subFields as $fieldKey => $field)
-				{
-					$outKey = '';
-
-					if($keyMode === 'label')
-					{
-						$outKey = $field['label'];
-					}
-					else if($keyMode === 'key')
-					{
-						$outKey = $field['key'];
-					}
-					else
-					{
-						$outKey = $field['name'];
-					}
-
-					$item[$outKey] = $field['value'];
-				}
+				$key = $sub_field['name'];
+				$item[$key] = get_sub_field($key);
 			}
-
-			// Simpler example for global links
-			// $item['link-item-alias'] = get_sub_field('link-item-alias');
-			// $item['link-item-text'] = get_sub_field('link-item-text');
-			// $item['link-item-aria'] = get_sub_field('link-item-aria');
-			// $item['link-item-href'] = get_sub_field('link-item-href');
-			// $item['link-item-page'] = get_sub_field('link-item-page');
-			// $item['link-item-target'] = get_sub_field('link-item-target');
 
 			$items[] = $item;
 		}
@@ -190,7 +162,6 @@ function acfGetRepeaterItems($mainField, $acfIdent, $taxonomy = '', $keyMode = '
 
 	return $items;
 }
-
 
 function acfGetSelectValue($fieldName, $postId)
 {

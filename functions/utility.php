@@ -206,20 +206,63 @@ function sortArrayByKeys(array $array, bool $asc = true): array
 
 function getFloat($number)
 {
-	$number = preg_replace('/\s/', '', $number); //remove whitespace
+	$number = preg_replace('/\s/', '', $number);
+	preg_match_all('/\d*(?:\.)?(?:\d*)?/', $number, $matches);
 
-	preg_match_all('/\d*(?:\.)?(?:\d*)?/', $number, $matches); //catch digits optional dot and digits
-
-	if(
-		$matches
-		&& count($matches)
-		&& $matches[0]
-		&& count($matches[0])
-	){
+	if($matches
+	&& count($matches)
+	&& $matches[0]
+	&& count($matches[0]))
+	{
 		return $matches[0][0];
 	}
-	else
+
+	return '';
+}
+
+function hexToRgb(string $hex, ?float $alpha = null, bool $asString = true)
+{
+	$hex = ltrim($hex, '#');
+
+	if(strlen($hex) === 3)
 	{
-		return '';
+		$hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2];
 	}
+
+	if(strlen($hex) !== 6)
+	{
+		return null;
+	}
+
+	$r = hexdec(substr($hex, 0, 2));
+	$g = hexdec(substr($hex, 2, 2));
+	$b = hexdec(substr($hex, 4, 2));
+
+	if($alpha !== null)
+	{
+		$alpha = max(0, min(1, $alpha));
+
+		if($asString)
+		{
+			return "rgba($r, $g, $b, $alpha)";
+		}
+
+		return [
+			'r' => $r,
+			'g' => $g,
+			'b' => $b,
+			'a' => $alpha
+		];
+	}
+
+	if($asString)
+	{
+		return "rgb($r, $g, $b)";
+	}
+
+	return [
+		'r' => $r,
+		'g' => $g,
+		'b' => $b
+	];
 }

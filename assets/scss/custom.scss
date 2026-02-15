@@ -240,6 +240,13 @@ body {
 // #endregion scrollbar
 ///////////////////////////////////
 
+@media(max-width: 991.98px) {
+	br:not(.keep)
+	{
+		display: none;
+	}
+}
+
 .text
 {
 	font-size: inc(18rem);
@@ -471,6 +478,136 @@ body {
 	.csl__current::after
 	{
 		transform: rotate(180deg) translateY(-50%);
+	}
+}
+
+///////////////////////////////////////
+
+// .tippy-box
+// {
+// 	position: relative;
+// 	background-color: color('white');
+// 	color: color('black');
+// 	border-radius: 10rem;
+// 	width: 560rem;
+// 	max-width: none !important;
+// 	box-shadow: 0rem 20rem 34rem rgba(color('black'), 0.16);
+// 	padding: 36rem;
+// 	z-index: 99999;
+
+// 	@media (max-width: 991.98px) {
+// 		width: 640rem;
+// 		padding: 24rem;
+// 	}
+
+// 	@media (max-width: 575.98px) {
+// 		width: 270rem;
+// 		padding: 12rem;
+// 	}
+// }
+
+// .tooltip
+// {
+// 	&__inner
+// 	{
+// 		position: relative;
+// 		padding-right: 12rem;
+// 		font-size: 12rem;
+// 		line-height: 18rem;
+// 		font-weight: 400;
+		
+// 		&.with-scrollbar
+// 		{
+// 			height: 266rem;
+
+// 			@media (max-width: 575.98px) {
+// 				height: 166rem;
+// 			}
+// 		}
+
+
+// 		.os-scrollbar-vertical {
+// 			width: 3rem;
+// 			padding: 0 0;
+// 			right: 0rem;
+			
+// 			@media(max-width: 991.98px) {
+// 				right: 0rem;
+// 			}
+
+// 			@media(max-width: 575.98px) {
+// 				width: 0rem;
+// 			}
+
+// 			.os-scrollbar-track {
+// 				background-color: color('transparent');
+
+// 				&::before
+// 				{
+// 					background-color: rgba(color('white'), 1);
+// 					transition: background-color .2s linear, opacity 0.2s linear;
+// 					transform: translateX(2rem);
+// 				}
+
+// 				&:hover {
+// 					&::before
+// 					{
+// 						background-color: rgba(color('blue'), 0.7);
+// 					}
+
+// 					.os-scrollbar-handle
+// 					{
+// 						background-color: rgba(color('blue'), 1);
+// 					}
+// 				}
+// 			}
+
+// 			.os-scrollbar-handle {
+// 				width: 3rem;
+// 				background-color: rgba(color('blue'), 0.7);
+// 				cursor: pointer;
+
+// 				&:hover {
+// 					background-color: rgba(color('blue'), 1);
+// 				}
+// 			}
+// 		}
+// 	}
+// }
+
+///////////////////////////////////////
+.hideon
+{
+	&--desktop
+	{
+		@media (min-width: 992px)
+		{
+			display: none !important;
+		}
+	}
+
+	&--tablet
+	{
+		@media (min-width: 576px) and (max-width: 991.98px)
+		{
+			display: none !important;
+		}
+	}
+
+	&--mobile
+	{
+		@media (max-width: 991.98px)
+		{
+			display: none !important;
+		}
+	}
+
+	&--phone
+	{
+		@media (max-width: 575.98px)
+		{
+			display: none !important;
+		}
 	}
 }
 

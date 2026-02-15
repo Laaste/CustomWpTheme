@@ -8,12 +8,17 @@ const WatchComponentsPlugin = require('./watch-components-plugin');
 
 module.exports = (env) =>
 {
-	const watch = env.watch == 'true';
+	const watch = env.watch === 'true';
 
-	// --- GENERUJ COMPOSABLE.SCSS ---
+	// --- DIRECTORIES ---
+	const themeRootFolder = path.resolve(__dirname, 'assets/scss/theme');
+
 	const componentsFolder = path.resolve(__dirname, 'assets/scss/theme/components');
 	const composableFile = path.resolve(__dirname, 'assets/scss/composable.scss');
 
+	const templatesFolder = path.resolve(__dirname, 'assets/scss/theme/templates');
+
+	// --- GENERATE COMPOSABLE.SCSS ---
 	function generateComposable() {
 		const componentFiles = glob.sync(`${componentsFolder}/**/*.scss`).map(f => f.replace(/\\/g, '/'));
 		let composableData = '// THIS FILE IS AUTOUPDATED, DON\'T EDIT MANUALLY\n';
@@ -23,35 +28,43 @@ module.exports = (env) =>
 		}).join('\n');
 		fs.writeFileSync(composableFile, composableData);
 	}
-
 	generateComposable();
 
-	// --- GENERUJ TEMPLATES.SCSS ---
-	const templatesFolder = path.resolve(__dirname, 'assets/scss/theme/templates');
-	const templatesIndex = path.resolve(__dirname, 'assets/scss/templates.scss');
-
-	function generateTemplatesIndex() {
-		const templateFiles = glob.sync(`${templatesFolder}/**/*.scss`).map(f => f.replace(/\\/g, '/'));
-		let templateContent = '// AUTO GENERATED\n';
-		templateContent += templateFiles.map(f => {
-			const relative = path.relative(path.resolve(__dirname, 'assets/scss'), f).replace(/\\/g, '/');
-			return `@use './${relative}';`;
-		}).join('\n');
-		fs.writeFileSync(templatesIndex, templateContent);
-	}
-
-	generateTemplatesIndex();
-
-	// --- WATCH NA FOLDERACH ---
+	// --- WATCH FOLDERS ---
 	if (watch) {
-		// Watch components
 		fs.watch(componentsFolder, { recursive: true }, (eventType, filename) => {
 			if (filename && filename.endsWith('.scss')) generateComposable();
 		});
-		// Watch templates
 		fs.watch(templatesFolder, { recursive: true }, (eventType, filename) => {
-			if (filename && filename.endsWith('.scss')) generateTemplatesIndex();
+			// nothing to generate, entries are dynamic
 		});
+	}
+
+	// Compile scss files in template root
+	function getThemeRootEntries()
+	{
+		const entries = {};
+		const files = glob.sync(`${themeRootFolder}/*.scss`);
+
+		files.forEach(file =>
+		{
+			const name = path.basename(file, '.scss');
+			entries[`css/theme/${name}`] = './' + path.relative(__dirname, file).replace(/\\/g, '/');
+		});
+
+		return entries;
+	}
+
+	// --- DYNAMIC TEMPLATE ENTRIES ---
+	function getTemplateEntries() {
+		const entries = {};
+		const files = glob.sync(`${templatesFolder}/*.scss`);
+		files.forEach(file => {
+			const name = path.basename(file, '.scss');
+			// <-- IMPORTANT: dynamic path from './'
+			entries[`css/theme/templates/${name}`] = './' + path.relative(__dirname, file).replace(/\\/g, '/');
+		});
+		return entries;
 	}
 
 	return {
@@ -68,7 +81,8 @@ module.exports = (env) =>
 			'js/main-compiled': path.resolve(__dirname, 'assets/js/main.js'),
 			'css/styles': path.resolve(__dirname, 'assets/scss/styles.scss'),
 			'css/composable': composableFile,
-			'css/templates': templatesIndex
+			...getThemeRootEntries(),
+			...getTemplateEntries() // each template as separated file
 		},
 		output: {
 			path: path.resolve(__dirname, 'assets/')
@@ -76,7 +90,7 @@ module.exports = (env) =>
 		plugins: [
 			new FixStyleOnlyEntriesPlugin(),
 			new MiniCssExtractPlugin({ filename: '[name].css' }),
-			new WatchComponentsPlugin([componentsFolder])
+			new WatchComponentsPlugin([componentsFolder, templatesFolder])
 		],
 		watch: watch,
 		module: {

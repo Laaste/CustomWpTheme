@@ -1,10 +1,10 @@
-import $, { ajaxSettings } from 'jquery';
-// import 'slick-carousel-latest';
+import $ from 'jquery';
+import 'slick-carousel-latest';
 // import '../vendor/bootstrap-datepicker-1.9.0/bootstrap-datepicker.min.js';
 // import '../vendor/bootstrap-datepicker-1.9.0/bootstrap-datepicker.pl.min.js';
-// import tippy from 'tippy.js';
 // import 'sharer.js';
 // import AOS from 'aos';
+// import tippy, { createSingleton } from 'tippy.js';
 
 const projectNameSpace = 'customproject';
 
@@ -232,7 +232,7 @@ function execFunction(alias /*, args */)
 document.addEventListener('DOMContentLoaded', function() {
 	const adminBar = document.getElementById('wpadminbar');
 
-	if(!adminBar) return;
+	if(! adminBar) return;
 
 	const toggleBtn = document.createElement('button');
 	toggleBtn.innerText = '☰';
@@ -271,14 +271,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
 OverlayScrollbars.plugin(ClickScrollPlugin);
 
-function toggleScrollState(osInstance){
+function toggleScrollState(osInstance, state = null){
 	// get the current behavior
 	var currentBehavior = osInstance.options().overflow;
+
+	var newBehaviour = state;
+	if(state === true)
+	{
+		newBehaviour = 'scroll';
+	}
+	else if(state === false)
+	{
+		newBehaviour = 'hidden';
+	}
+	else if(newBehaviour === null)
+	{
+		newBehaviour = (currentBehavior.y == 'scroll') ? 'hidden' : 'scroll'
+	}
 
 	// set the new behavior & update
 	osInstance.options({
 		overflow: {
-			y: currentBehavior.y == 'scroll' ? 'hidden' : 'scroll'
+			y: currentBehavior.y = newBehaviour,
 			// y: currentBehavior.y == 'scroll'
 		}
 	});
@@ -306,9 +320,9 @@ var osInstanceBody = OverlayScrollbars(document.body,
 	},
 });
 
-function makeScrollbars()
+function makeScrollbars(elementSelector = '.js-scrollbar')
 {
-	var elementsWithScrollbars = $('.js-scrollbar');
+	var elementsWithScrollbars = $(elementSelector);
 
 	if (elementsWithScrollbars.length)
 	{
@@ -356,6 +370,7 @@ function makeScrollbars()
 							clickScroll: true,
 						},
 					});
+
 					$el.data('osInstance', osInstance);
 				}
 			}
@@ -609,16 +624,45 @@ $('.js-scroll-to-next').on('click', function(e)
 	}
 });
 
+var scrolling = false;
+var scrolledToFirstError = false;
+
 /**
  * Scroll do elementu z opcjonalnym kontenerem i czasem animacji
  * @param {jQuery} targetObj - element do którego scrollujemy
  * @param {jQuery} [container=$('html, body')] - opcjonalny kontener scrolla
  * @param {number} [duration=500] - czas animacji w ms
  */
-function scrollToEl(targetObj, container = $('html, body'), duration = 500, offset = 0)
+function scrollToEl(targetObj, container = $('html, body'), duration = 500, offset = 0, isOz = false)
 {
-	if(! targetObj?.length)
+	if(scrolling) return false;
+
+	scrolling = true;
+
+	if(!targetObj?.length)
 	{
+		return;
+	}
+
+	if(isOz === true)
+	{
+		var osInstance = container.data('osInstance');
+
+		if(osInstance)
+		{
+			const { viewport } = osInstance.elements();
+
+			// 1. Pobierz wysokość paddingu / sticky header (jeśli jest)
+
+			// 2. Oblicz docelowy scroll
+			var top = targetObj.offset().top;
+
+			viewport.scrollTo({
+				top: top,
+				behavior: 'smooth'
+			});
+		}
+
 		return;
 	}
 
@@ -626,7 +670,7 @@ function scrollToEl(targetObj, container = $('html, body'), duration = 500, offs
 
 	container.animate(
 	{
-		scrollTop: (scrollOffset + offset)
+		scrollTop: scrollOffset + offset
 	}, duration);
 
 	var header = $('.js-header-fixed');
@@ -635,6 +679,8 @@ function scrollToEl(targetObj, container = $('html, body'), duration = 500, offs
 	{
 		header.addClass('header--hidden');
 	}
+
+	scrolling = false;
 }
 
 $(function(){
@@ -662,9 +708,9 @@ $(function(){
 
 $('.js-copy-to-clipboard').on('click', function(e)
 {
-	var that = $(this);
+	var $that = $(this);
 
-	var valueToCopy = that.attr('data-to-copy');
+	var valueToCopy = $that.attr('data-to-copy');
 
 	if(valueToCopy)
 	{
@@ -917,10 +963,27 @@ function cslUpdateCurrent($container)
 	var $input = $container.find('.js-csl-current');
 	var defaultLabel = $input.attr('data-default-label') || 'Wybierz';
 	var selectedValues = JSON.parse($container.attr('data-selected-values') || '[]');
+
+	var $inputError = $container.find('.js-input-error');
+
+	$input.removeClass('error');
+
+	if($inputError.length)
+	{
+		$inputError.hide();
+	}
 	
 	if(selectedValues.length === 0)
 	{
-		$input.html(defaultLabel);
+		if($input.is('input'))
+		{
+			$input.val(defaultLabel);
+		}
+		else
+		{
+			$input.html(defaultLabel);
+		}
+
 		$input.removeClass('choosed');
 		$input.attr('data-value', '[]');
 	}
@@ -949,8 +1012,16 @@ function cslUpdateCurrent($container)
 			var valueTarget = $container.find(valueTargetSelector);
 			valueTarget.val(selectedValues.join(', '));
 		}
-		
-		$input.html(labels.join(', '));
+
+		if($input.is('input'))
+		{
+			$input.val(labels.join(', '));
+		}
+		else
+		{
+			$input.html(labels.join(', '));
+		}
+
 		$input.addClass('choosed');
 		$input.attr('data-value', JSON.stringify(selectedValues));
 	}
@@ -1123,18 +1194,18 @@ $(function()
 //#region Slick
 //
 
-// var $introModelSlider;
-// var $introModelSliderNav;
+// var introModelSliders = [];
+// var introModelSliderNavs = [];
 
 // var sliders = [];
 
 // function bootSlicks()
 // {
-// 	bootIntroModelSlider();
+// 	// bootIntroModelSlider();
 
 // 	sliders = [
-// 		$introModelSlider,
-// 		$introModelSliderNav,
+// 		// introModelSliders,
+// 		// introModelSliderNavs,
 // 	];
 // }
 
@@ -1148,13 +1219,18 @@ $(function()
 
 // 	if($sliders.length)
 // 	{
-// 		$sliders.each(function()
+// 		$sliders.each(function(e)
 // 		{
-// 			var $slider = $(this);
+// 			var slider = this;
+//			introModelSliders.push(slider);
+//
+//			var $slider = $(slider);
 // 			var $sliderContainer = $slider.closest('.js-intro-model-slider-container');
-// 			var $nav = $sliderContainer.find('.js-intro-model-slider-nav');
 // 			var $progressBar = $sliderContainer.find('.js-intro-model-slider-progress');
 // 			var $itemLink = $sliderContainer.find('.js-intro-model-slider-item-link');
+// 			var $nav = $sliderContainer.find('.js-intro-model-slider-nav');
+
+			// introModelSliderNavs.push($nav.eq(0));
 
 // 			if($nav.length)
 // 			{
@@ -1192,7 +1268,6 @@ $(function()
 // 				lazyLoad: 'anticipated'
 // 			});
 
-// 			// przyciski powiązane z danym sliderContainer
 // 			$sliderContainer.find('.js-intro-model-slider-prev').on('click', function()
 // 			{
 // 				$introModelSlider.slick('slickPrev');
@@ -1249,6 +1324,30 @@ $(function()
 // 				updateProgressBar(index);
 // 			});
 // 		});
+// 	}
+// }
+
+// function updateNavState(slick, $prevButton, $nextButton)
+// {
+// 	var current = slick.currentSlide;
+// 	var max = slick.slideCount - slick.options.slidesToShow;
+
+// 	if(current > 0)
+// 	{
+// 		$prevButton.addClass('active');
+// 	}
+// 	else
+// 	{
+// 		$prevButton.removeClass('active');
+// 	}
+
+// 	if(current < max)
+// 	{
+// 		$nextButton.addClass('active');
+// 	}
+// 	else
+// 	{
+// 		$nextButton.removeClass('active');
 // 	}
 // }
 
@@ -1360,10 +1459,108 @@ $(document).on('click', '.js-video-poster', function(e)
 ////////////////////////////////////////
 // Lazyloading
 
-var lazyBgAttr = 'data-lazy-bg';
 var offsetTop = $(window).scrollTop();
 var minScrollTime = 100;
 
+var dataLazyVideoArray = [];
+var lazyVideoAttr = 'data-lazy-video';
+
+function processLazyVideoScroll()
+{
+	offsetTop = $(window).scrollTop();
+
+	$.each(dataLazyVideoArray, function(index, element)
+	{
+		var source = $(element);
+		var video = source.closest('video').get(0);
+
+		if(video.dataset.loaded) return;
+
+		if(source.attr('data-lazy-video-ready') == 'false') return;
+
+		// === BREAKPOINT CHECK ===
+		var breakpoint = source.data('lazy-video-breakpoint');
+
+		if(breakpoint)
+		{
+			var allowed = false;
+			var breakpoints = breakpoint.split(',');
+
+			for(var i = 0; i < breakpoints.length; i++)
+			{
+				var bp = breakpoints[i].trim();
+
+				if
+				(
+					(bp === 'lg' && windowWidth >= 992) ||
+					(bp === 'md' && windowWidth >= 576) ||
+					(bp === 'sm' && windowWidth < 576)
+				)
+				{
+					allowed = true;
+					break;
+				}
+			}
+
+			if(! allowed) return;
+		}
+		// ========================
+
+		var elementTop = video.getBoundingClientRect().top + offsetTop;
+
+		if(offsetTop + (windowHeight * 1.5) > elementTop)
+		{
+			source.attr('src', source.attr(lazyVideoAttr));
+			video.load();
+			video.play();
+
+			video.dataset.loaded = true;
+			source.removeAttr(lazyVideoAttr);
+		}
+	});
+}
+
+$(function()
+{
+	dataLazyVideoArray = $('[' + lazyVideoAttr + ']');
+
+	if(dataLazyVideoArray.length)
+	{
+		setTimeout(function()
+		{
+			windowHeight = $(window).height();
+			
+			offsetTop = $(window).scrollTop();
+			processLazyVideoScroll();
+
+			var scrollTimer;
+			var lastScrollFireTime = 0;
+
+			$(window).on('scroll resize', function()
+			{
+				var now = new Date().getTime();
+
+				if(! scrollTimer)
+				{
+					if(now - lastScrollFireTime > (3 * minScrollTime))
+					{
+						processLazyVideoScroll();
+						lastScrollFireTime = now;
+					}
+
+					scrollTimer = setTimeout(function()
+					{
+						scrollTimer = null;
+						lastScrollFireTime = new Date().getTime();
+						processLazyVideoScroll();
+					}, minScrollTime);
+				}
+			});
+		}, 200);
+	}
+});
+
+var lazyBgAttr = 'data-lazy-bg';
 var dataLazyBgArray = [];
 
 function processLazyBgScroll()
@@ -1498,3 +1695,221 @@ $(function()
 });
 
 ////////////////////////////////////////
+
+$(document).on('click', '.js-expander-button', function(e)
+{
+	var $that = $(this);
+	var thatIndex = $that.index();
+	var $container = $that.closest('.js-expanders-container');
+
+	var $expanders = $container.find('.js-expander-item');
+
+	$that.toggleClass('active');
+
+	$expanders.eq(thatIndex).slideToggle();
+});
+
+$(document).on('click', '.js-tabs-button', function(e)
+{
+	var $that = $(this);
+	var thatIndex = $that.index();
+	var $container = $that.closest('.js-tabs-container');
+
+	var $buttons = $container.find('.js-tabs-button');
+	var $tabs = $container.find('.js-tabs-item');
+
+	$buttons.removeClass('active');
+	$that.addClass('active');
+
+	$tabs.hide();
+});
+
+////////////////////////////////////////////
+
+// function bindScrollTranslateY($element, maxTranslateConfig, offsets)
+// {
+// 	if(! $element.length) return false;
+
+// 	const startScroll = $element.offset().top;
+
+// 	$(window).on('scroll resize', function()
+// 	{
+// 		const width = window.innerWidth;
+
+// 		// --- resolve maxTranslateRem ---
+// 		let maxTranslateRem = null;
+
+// 		if (maxTranslateConfig === false)
+// 		{
+// 			$element.css('transform', '');
+// 			return;
+// 		}
+
+// 		if(maxTranslateConfig === null)
+// 		{
+// 			let lg = $element.attr('data-bind-to-rem-lg');
+// 			let md = $element.attr('data-bind-to-rem-md');
+// 			let sm = $element.attr('data-bind-to-rem-sm');
+
+// 			lg = lg === undefined ? null : (lg === 'false' ? false : parseFloat(lg));
+// 			md = md === undefined ? null : (md === 'false' ? false : parseFloat(md));
+// 			sm = sm === undefined ? null : (sm === 'false' ? false : parseFloat(sm));
+
+// 			// --- inheritance ---
+// 			if(lg !== null)
+// 			{
+// 				if(md === null) md = lg;
+// 				if(sm === null) sm = md;
+// 			}
+
+// 			// false blocks inheritance
+// 			if(md === false) sm = false;
+
+// 			maxTranslateConfig =
+// 			{
+// 				lg: lg,
+// 				md: md,
+// 				sm: sm
+// 			};
+// 		}
+
+// 		if (typeof maxTranslateConfig === 'object')
+// 		{
+// 			if (width > 992)
+// 			{
+// 				maxTranslateRem = maxTranslateConfig.lg ?? maxTranslateConfig.md ?? maxTranslateConfig.sm ?? false;
+// 			}
+// 			else if (width > 576)
+// 			{
+// 				maxTranslateRem = maxTranslateConfig.md ?? maxTranslateConfig.lg ?? maxTranslateConfig.sm ?? false;
+// 			}
+// 			else
+// 			{
+// 				maxTranslateRem = maxTranslateConfig.sm ?? maxTranslateConfig.md ?? maxTranslateConfig.lg ?? false;
+// 			}
+// 		}
+// 		else
+// 		{
+// 			maxTranslateRem = maxTranslateConfig;
+// 		}
+
+// 		if (maxTranslateRem === false)
+// 		{
+// 			$element.css('transform', '');
+// 			return;
+// 		}
+
+// 		const maxTranslatePx = convertRemToPixels(maxTranslateRem);
+
+// 		// --- resolve offsetRem ---
+// 		let offsetRem = 0;
+
+// 		if (typeof offsets === 'object')
+// 		{
+// 			if (width > 992)
+// 			{
+// 				offsetRem = offsets.lg ?? offsets.md ?? offsets.sm ?? 0;
+// 			}
+// 			else if (width > 576)
+// 			{
+// 				offsetRem = offsets.md ?? offsets.lg ?? offsets.sm ?? 0;
+// 			}
+// 			else
+// 			{
+// 				offsetRem = offsets.sm ?? offsets.md ?? offsets.lg ?? 0;
+// 			}
+// 		}
+// 		else
+// 		{
+// 			offsetRem = offsets || 0;
+// 		}
+
+// 		// --- scroll logic ---
+// 		const scrollTop = $(window).scrollTop() + convertRemToPixels(offsetRem);
+// 		const deltaPx = Math.max(scrollTop - startScroll, 0);
+// 		const clampedPx = Math.min(deltaPx, maxTranslatePx);
+// 		const translateRem = pxToRem(clampedPx);
+
+// 		$element.css(
+// 			'transform',
+// 			`translateY(${translateRem}rem)`
+// 		);
+// 	});
+// }
+
+// $(function()
+// {
+// 	bindScrollTranslateY(
+// 		$('.js-bindscroll-y'),
+// 		null,
+// 		{
+// 			lg: 70,
+// 		}
+// 	);
+// });
+
+/////////////////////////////////////////////
+
+// var tippyDesktopOffset = [0, 11]; // x y
+// var tippyMobileOffset = [0, 11]; // x y
+
+// function registerTooltips(container = document) {
+// 	const elements = container.querySelectorAll('.js-tooltip');
+// 	if (!elements.length) return;
+
+// 	tippy(elements, {
+// 		allowHTML: true,
+// 		interactive: true,
+// 		content(ref) {
+// 			var contentText = ref.dataset.tooltipContent || '';
+// 			return `
+// 				<div class="tooltip">
+// 					<div class="tooltip__inner js-scrollbar">
+// 						${contentText}
+// 					</div>
+// 				</div>
+// 			`;
+// 		},
+// 		delay: 500,
+// 		animation: 'shift-away-subtle',
+// 		theme: 'light',
+// 		duration: [0, 500],
+// 		placement(ref) {
+// 			return ref.dataset.tooltipPlacement || ((window.innerWidth >= 992) ? 'right' : 'top');
+// 		},
+// 		offset(ref) {
+// 			return (window.innerWidth >= 992) ? tippyDesktopOffset : tippyMobileOffset;
+// 		},
+// 		onShow(instance) {
+// 			const dataset = instance.reference.dataset;
+
+// 			const placement = dataset.tooltipPlacement 
+// 				? dataset.tooltipPlacement 
+// 				: (window.innerWidth >= 992 ? 'right' : 'top');
+
+// 			instance.setProps({
+// 				delay: dataset.tooltipDelay ? parseInt(dataset.tooltipDelay) : 500,
+// 				animation: dataset.tooltipAnimation || 'shift-away-subtle',
+// 				theme: dataset.tooltipTheme || 'light',
+// 				duration: dataset.tooltipDuration
+// 					? dataset.tooltipDuration.split(',').map(Number)
+// 					: [0, 500],
+// 				placement: placement
+// 			});
+// 		},
+// 		onMount(instance) {
+// 			// scrollbar logic
+// 			var scrollContent = instance.popper.querySelectorAll('.js-scrollbar');
+// 			scrollContent.forEach(function(element) {
+// 				if($(element).height() >= convertRemToPixels(265)) {
+// 					element.classList.add('with-scrollbar');
+// 				}
+// 			});
+// 			makeScrollbars(scrollContent);
+// 		}
+// 	});
+// }
+
+// $(function() {
+// 	registerTooltips(document);
+// });

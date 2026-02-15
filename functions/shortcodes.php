@@ -1,7 +1,8 @@
 <?php
 $shorcodesFiles = [
+	'sc_date.php',
+	'sc_current_id.php',
 	'sc_br_tag.php',
-	'sc_str_current_year.php',
 	'sc_link.php',
 	'sc_info.php',
 	'sc_get_permalink.php',

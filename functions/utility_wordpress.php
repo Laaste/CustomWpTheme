@@ -190,6 +190,8 @@ function getPostsByTitle($title, $args = [])
 
 	remove_filter('posts_search', $filterFunction, 10, 2);
 
+	wp_reset_postdata();
+
 	return $posts;
 }
 
@@ -699,7 +701,12 @@ function getPostsCount($args = [])
 	];
 
 	$query = new WP_Query($getModelsCountArgs);
-	return $query->found_posts;
+
+	$foundPosts = $query->found_posts;
+
+	wp_reset_postdata();
+
+	return $foundPosts;
 }
 
 function getPostThumbnailAlt($postId)
@@ -719,4 +726,64 @@ function getPostThumbnailAlt($postId)
 	}
 
 	return '';
+}
+
+/**
+ * Bring back post revision as new post
+ *
+ * @param int $revisionId ID
+ * @param string $postType
+ * @param string $postStatus
+ * @return int|WP_Error new post Id or WP_Error
+ */
+function cloneRevisionAsNewPost($revisionId, $postType = 'post', $postStatus = 'private')
+{
+	$revision = get_post($revisionId);
+
+	if(! $revision
+	|| $revision->post_type !== 'revision')
+	{
+		return new WP_Error('invalid_revision', 'Provided ID is not valid for revision.');
+	}
+
+	$newPostId = wp_insert_post(
+	[
+		'post_author' => $revision->post_author,
+		'post_date' => $revision->post_date,
+		'post_content' => $revision->post_content,
+		'post_title' => '[Revision id ' . $revisionId . ']' .$revision->post_title,
+		'post_status' => $postStatus,
+		'post_type' => $postType,
+	]);
+
+	if(is_wp_error($newPostId))
+	{
+		return $newPostId;
+	}
+
+	if(function_exists('get_fields')
+	&& function_exists('update_field'))
+	{
+		$acfFields = get_fields($revisionId);
+
+		if($acfFields)
+		{
+			foreach ($acfFields as $key => $value)
+			{
+				update_field($key, $value, $newPostId);
+			}
+		}
+	}
+
+	$meta = get_post_meta($revisionId);
+
+	foreach($meta as $key => $values)
+	{
+		foreach($values as $value)
+		{
+			update_post_meta($newPostId, $key, maybe_unserialize($value));
+		}
+	}
+
+	return $newPostId;
 }

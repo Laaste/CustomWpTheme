@@ -1,14 +1,12 @@
 @use "sass:map";
 
-$configFontFilesPath: '#{$assetsPath}/fonts' !default;
+$configFontFilesPath: '../../fonts' !default;
 $configFontFamilyClassPrefix: 'family' !default;
 $configGenerateFontFaces: true !default;
 $configGenerateFontFamilyClass: false !default;
 
-@function getFontFormat($fileName)
+@function getFontFormat($extension)
 {
-	$extension: getFileExtensions($fileName);
-
 	@if $extension == 'otf'
 	{
 		@return 'opentype';
@@ -27,6 +25,26 @@ $configGenerateFontFamilyClass: false !default;
 	}
 }
 
+@function getFileExtensions($fileName)
+{
+	$length: str-length($fileName);
+	$extension: "";
+	$foundPeriod: false;
+
+	@for $i from $length through 1
+	{
+		$char: str-slice($fileName, $i, $i);
+
+		@if $char == "." and not $foundPeriod
+		{
+			$extension: str-slice($fileName, $i + 1);
+			$foundPeriod: true;
+		}
+	}
+
+	@return $extension;
+}
+
 @function getSrcPath($fontFamily, $src)
 {
 	@return $configFontFilesPath + '/' + $fontFamily + '/' + $src;
@@ -41,18 +59,15 @@ $configGenerateFontFamilyClass: false !default;
 	{
 		$srcPath: getSrcPath($fontFamilyName, $src);
 		$srcExtension: getFileExtensions($src);
-
-		$computed: '';
-		// $computed: $computed + 'local("' + $fontFamilyName + '")';
-		$computed: $computed + ' url("' + $srcPath + '")';
-		$computed: $computed + ' format("' + $srcExtension + '")';
+		$format: getFontFormat($srcExtension);
+		$computed: 'url(\'' + $srcPath + '\')';
+		$computed: $computed + ' format(\'' + $format + '\')';
 
 		@return $computed;
 	}
 	@else
 	{
 		$computed: '';
-		// $computed: $computed + ' local("' + $fontFamilyName + '")';
 
 		$iterator: 0;
 
@@ -60,9 +75,10 @@ $configGenerateFontFamilyClass: false !default;
 		{
 			$srcPath: getSrcPath($fontFamilyName, $source);
 			$srcExtension: getFileExtensions($source);
+			$format: getFontFormat($srcExtension);
 
-			$computed: $computed + ' url("' + $srcPath + '")';
-			$computed: $computed + ' format("' + $srcExtension + '")';
+			$computed: $computed + ' url(\'' + $srcPath + '\')';
+			$computed: $computed + ' format(\'' + $format + '\')';
 
 			@if $iterator != (length($src) - 1)
 			{
@@ -105,7 +121,7 @@ $configGenerateFontFamilyClass: false !default;
 		{
 			@font-face
 			{
-				font-family: #{'"' + $fontFamilyName + '"' + getSansSerif($font)};
+				font-family: #{'\'' + $fontFamilyName + '\'' + getSansSerif($font)};
 				src: #{getFontSrc($fontFamilyName, $font)};
 
 				@if map-has-key($font, 'params')
@@ -128,7 +144,7 @@ $configGenerateFontFamilyClass: false !default;
 		{
 			.#{$configFontFamilyClassPrefix}-#{$fontClassName}
 			{
-				font-family: #{'"' + $fontFamilyName + '"' + getSansSerif($font)};
+				font-family: #{'\'' + $fontFamilyName + '\'' + getSansSerif($font)};
 
 				@if map-has-key($font, 'params')
 				{
