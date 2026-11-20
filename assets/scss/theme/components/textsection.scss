@@ -1,0 +1,11 @@
+@import "@rootScss/config.scss";
+@import "@rootScss/variables.scss";
+@import "@rootScss/functions.scss";
+
+.textsection
+{
+	position: relative;
+	font-size: 16rem;
+	line-height: 1.2;
+	color: color('black');
+}

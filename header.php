@@ -12,10 +12,12 @@ $fontSizes = [
 	150 => 'A+',
 	200 => 'A++',
 ];
+
+$templateSlug = get_page_template_slug($currentId);
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -35,7 +37,9 @@ $fontSizes = [
 	<link rel="stylesheet" href="<?= get_template_directory_uri(); ?>/assets/css/styles.css">
 </head>
 
-<body>
+<body <?php body_class(); ?>>
+	<?php wp_body_open(); ?>
+
 	<style>
 	:root
 	{
@@ -43,73 +47,49 @@ $fontSizes = [
 	}
 	</style>
 
-	<div class="main-wrapper">
-		<div>
-			<header class="header">
-				<a href="<?= $siteUrl; ?>" class="header__logo__container" aria-label="<?= __('Site logo', 'customtheme'); ?>">
-					<img data-lazy-img="<?= get_template_directory_uri(); ?>/assets/images" class="header__logo" alt="<?= __('Site logo', 'customtheme'); ?>">
-				</a>
+	<main class="main-wrapper" role="main">
+		<header class="header js-header">
+			<a href="<?= $siteUrl; ?>" class="header__logo__container" aria-label="<?= __('Site logo', 'customtheme'); ?>">
+				<img src="<?= get_template_directory_uri(); ?>/assets/images/global/logo.svg" class="header__logo js-nav-click" alt="<?= __('Site logo', 'customtheme'); ?>">
+			</a>
 
+			<?php
+			$headerMenu = getMenuItems('header_menu');
+
+			if($headerMenu)
+			{
+			?>
+
+			<nav class="header__links js-header-links" role="navigation">
 				<?php
-				$headerMenu = getMenuItems('header_menu');
-
-				if($headerMenu)
+				foreach($headerMenu as $primaryMenuEl)
 				{
-				?>
+					$target = '_self';
 
-				<nav class="header__links">
-					<?php
-					foreach($headerMenu as $primaryMenuEl)
+					if($primaryMenuEl->type == 'custom')
 					{
-						$target = '_self';
-
-						if($primaryMenuEl->type == 'custom')
-						{
-							$target = '_blank';
-						}
-					?>
-
-					<a href="<?= $primaryMenuEl->url; ?>" target="<?= $target; ?>" class="header__link <?= ($currentId == $primaryMenuEl->object_id) ? 'active' : '' ?>">
-						<div>
-							<?= $primaryMenuEl->title; ?>
-						</div>
-					</a>
-
-					<?php
+						$target = '_blank';
 					}
-					?>
-				</nav>
+
+					$children = $primaryMenuEl->children;
+					$childrenCount = ($children) ? count($children) : 0;
+				?>
 
 				<?php
 				}
 				?>
 
-				<div class="header__utility">
-					<div class="header__utility__fontsizes js-csl-container">
-						<div class="header__utility__fontsizes__current js-csl-current" data-value="<?= $fontSize ?>"><?= $fontSizes[$fontSize]; ?></div>
+			</nav>
 
-						<ul class="header__utility__fontsizes__options js-csl-options" style="display: none;">
-							<?php
-							foreach($fontSizes as $value => $text)
-							{
-							?>
+			<?php
+			}
+			?>
 
-							<li class="header__utility__fontsizes__option js-csl-option" data-value="<?= $value; ?>">
-								<button type="button" class="js-font-size" aria-label="<?= __("Set font-size to:", "customtheme") . " $value%"; ?>" data-size="<?= $value; ?>">
-									<?= $text; ?>
-								</button>
-							</li>
-
-							<?php
-							}
-							?>
-						</ul>
-					</div>
-
-					<button type="button" class="js-hamburger" aria-label="<?= __("Toggle nav menu visibility", "customtheme"); ?>">
-						<span></span>
-						<span></span>
-						<span></span>
-					</button>
-				</div>
-			</header>
+			<div class="header__utility">
+				<button type="button" class="js-hamburger js-general-click" aria-label="<?= __("Toggle nav menu visibility", "customtheme"); ?>">
+					<span></span>
+					<span></span>
+					<span></span>
+				</button>
+			</div>
+		</header>

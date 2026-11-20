@@ -1204,12 +1204,21 @@ body > .os-scrollbar {
   --os-handle-bg-hover: rgba(255, 255, 255, 0.55);
   --os-handle-bg-active: rgba(255, 255, 255, 0.66);
 }
+/*!********************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[0].use[1]!./node_modules/tippy.js/dist/tippy.css ***!
+  \********************************************************************************************************************/
+.tippy-box[data-animation=fade][data-state=hidden]{opacity:0}[data-tippy-root]{max-width:calc(100vw - 10px)}.tippy-box{position:relative;background-color:#333;color:#fff;border-radius:4px;font-size:14px;line-height:1.4;white-space:normal;outline:0;transition-property:transform,visibility,opacity}.tippy-box[data-placement^=top]>.tippy-arrow{bottom:0}.tippy-box[data-placement^=top]>.tippy-arrow:before{bottom:-7px;left:0;border-width:8px 8px 0;border-top-color:initial;transform-origin:center top}.tippy-box[data-placement^=bottom]>.tippy-arrow{top:0}.tippy-box[data-placement^=bottom]>.tippy-arrow:before{top:-7px;left:0;border-width:0 8px 8px;border-bottom-color:initial;transform-origin:center bottom}.tippy-box[data-placement^=left]>.tippy-arrow{right:0}.tippy-box[data-placement^=left]>.tippy-arrow:before{border-width:8px 0 8px 8px;border-left-color:initial;right:-7px;transform-origin:center left}.tippy-box[data-placement^=right]>.tippy-arrow{left:0}.tippy-box[data-placement^=right]>.tippy-arrow:before{left:-7px;border-width:8px 8px 8px 0;border-right-color:initial;transform-origin:center right}.tippy-box[data-inertia][data-state=visible]{transition-timing-function:cubic-bezier(.54,1.5,.38,1.11)}.tippy-arrow{width:16px;height:16px;color:#333}.tippy-arrow:before{content:"";position:absolute;border-color:transparent;border-style:solid}.tippy-content{position:relative;padding:5px 9px;z-index:1}
+/*!**********************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[0].use[1]!./node_modules/tippy.js/themes/light.css ***!
+  \**********************************************************************************************************************/
+.tippy-box[data-theme~=light]{color:#26323d;box-shadow:0 0 20px 4px rgba(154,161,177,.15),0 4px 80px -8px rgba(36,40,47,.25),0 4px 4px -2px rgba(91,94,105,.15);background-color:#fff}.tippy-box[data-theme~=light][data-placement^=top]>.tippy-arrow:before{border-top-color:#fff}.tippy-box[data-theme~=light][data-placement^=bottom]>.tippy-arrow:before{border-bottom-color:#fff}.tippy-box[data-theme~=light][data-placement^=left]>.tippy-arrow:before{border-left-color:#fff}.tippy-box[data-theme~=light][data-placement^=right]>.tippy-arrow:before{border-right-color:#fff}.tippy-box[data-theme~=light]>.tippy-backdrop{background-color:#fff}.tippy-box[data-theme~=light]>.tippy-svg-arrow{fill:#fff}
+/*!**************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[0].use[1]!./node_modules/tippy.js/animations/shift-away-subtle.css ***!
+  \**************************************************************************************************************************************/
+.tippy-box[data-animation=shift-away-subtle][data-state=hidden]{opacity:0}.tippy-box[data-animation=shift-away-subtle][data-state=hidden][data-placement^=top]{transform:translateY(5px)}.tippy-box[data-animation=shift-away-subtle][data-state=hidden][data-placement^=bottom]{transform:translateY(-5px)}.tippy-box[data-animation=shift-away-subtle][data-state=hidden][data-placement^=left]{transform:translateX(5px)}.tippy-box[data-animation=shift-away-subtle][data-state=hidden][data-placement^=right]{transform:translateX(-5px)}
 /*!**********************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[0].use[1]!./node_modules/sass-loader/dist/cjs.js!./assets/scss/styles.scss ***!
   \**********************************************************************************************************************************************/
-/**
- * Note that if ur using just px or rem u probably dont need wrap every value by val({value}) it's purpose it's more like for handling vw or so...
- */
 html {
   font-family: sans-serif;
 }
@@ -1294,6 +1303,13 @@ iframe {
   border: none;
 }
 
+blockquote {
+  margin-block-start: 0rem;
+  margin-block-end: 0rem;
+  margin-inline-start: 0rem;
+  margin-inline-end: 0rem;
+}
+
 body.admin-bar {
   margin-top: 0 !important;
 }
@@ -1311,125 +1327,130 @@ body.admin-bar {
   transform: translateY(-100%);
 }
 
-/**
- * Keep from smallest to biggest, each value is min px breakpoint
- * - by this breakpoints most of utility classes will be generated, also it will
- */
-/**
- * Keep from smallest to biggest
- * scaling value should be calculated of (current break point min / next breakpoint min)
- */
-/** 
- * use dynamic assign by breakpoints or assign your custom map of 
- */
-/**
- * Bootstrap like
- */
-/**
- * Tailwind like
- */
-/**
- * Directions will be prefixed
- * so if prefix is "m" and providing "t" for top will be mt
- * allowed directions are:
- * ~ t -> top
- * ~ r -> right
- * ~ b -> bottom
- * ~ l -> left
- * ~ x -> left and right
- * ~ y -> top and bottom
- */
-/**
- * Gutters value should be keept as an number cause it will be wrapped in val function for negative margins
- */
-/**
- * Columns values should contain unit if needed wrap in val to use native calculations
- * - those values are are used for offset
- */
-/* EXAMPLE */
-/* Font_directory:
- * (
-		'class-name-for-family':
- * 		(
- * 			'src': FontFileName.extension, // or map like (FontFileName.extension, FontFileName2.otherExtension)
- * 			'sans-serif': false, //added by default can be disabled
- * 			'params':
- * 			(
- * 				'font-weight': 400,
- * 				'font-style': 'italic',
- * 				'font-stretch': 'condensed',
- * 			)
- * 		)
- * )
- */
-/**
- * Pass single numeric value or map with named breakpoints: numeric value
- *
- * If map provided then can be specified default (as "default" or "value" key: numeric value
- */
-/**
- * Keep from smallest to biggest, each value is min px breakpoint
- * - by this breakpoints most of utility classes will be generated, also it will
- */
-/**
- * Keep from smallest to biggest
- * scaling value should be calculated of (current break point min / next breakpoint min)
- */
-/** 
- * use dynamic assign by breakpoints or assign your custom map of 
- */
-/**
- * Bootstrap like
- */
-/**
- * Tailwind like
- */
-/**
- * Directions will be prefixed
- * so if prefix is "m" and providing "t" for top will be mt
- * allowed directions are:
- * ~ t -> top
- * ~ r -> right
- * ~ b -> bottom
- * ~ l -> left
- * ~ x -> left and right
- * ~ y -> top and bottom
- */
-/**
- * Gutters value should be keept as an number cause it will be wrapped in val function for negative margins
- */
-/**
- * Columns values should contain unit if needed wrap in val to use native calculations
- * - those values are are used for offset
- */
-/* EXAMPLE */
-/* Font_directory:
- * (
-		'class-name-for-family':
- * 		(
- * 			'src': FontFileName.extension, // or map like (FontFileName.extension, FontFileName2.otherExtension)
- * 			'sans-serif': false, //added by default can be disabled
- * 			'params':
- * 			(
- * 				'font-weight': 400,
- * 				'font-style': 'italic',
- * 				'font-stretch': 'condensed',
- * 			)
- * 		)
- * )
- */
-/**
- * Pass single numeric value or map with named breakpoints: numeric value
- *
- * If map provided then can be specified default (as "default" or "value" key: numeric value
- */
-html {
-  overflow: -moz-scrollbars-vertical;
-  overflow-y: scroll;
+.cursor-pointer {
+  cursor: pointer;
 }
 
+/**
+ * Keep from smallest to biggest, each value is min px breakpoint
+ * - by this breakpoints most of utility classes will be generated, also it will
+ */
+/**
+ * Keep from smallest to biggest
+ * scaling value should be calculated of (current break point min / next breakpoint min)
+ */
+/** 
+ * use dynamic assign by breakpoints or assign your custom map of 
+ */
+/**
+ * Bootstrap like
+ */
+/**
+ * Tailwind like
+ */
+/**
+ * Custom by project
+ */
+/**
+ * Directions will be prefixed
+ * so if prefix is "m" and providing "t" for top will be mt
+ * allowed directions are:
+ * ~ t -> top
+ * ~ r -> right
+ * ~ b -> bottom
+ * ~ l -> left
+ * ~ x -> left and right
+ * ~ y -> top and bottom
+ */
+/**
+ * Gutters value should be keept as an number cause it will be wrapped in val function for negative margins
+ */
+/**
+ * Columns values should contain unit if needed wrap in val to use native calculations
+ * - those values are are used for offset
+ */
+/* EXAMPLE */
+/* Font_directory:
+ * (
+		'class-name-for-family':
+ * 		(
+ * 			'src': FontFileName.extension, // or map like (FontFileName.extension, FontFileName2.otherExtension)
+ * 			'sans-serif': false, //added by default can be disabled
+ * 			'params':
+ * 			(
+ * 				'font-weight': 400,
+ * 				'font-style': 'italic',
+ * 				'font-stretch': 'condensed',
+ * 			)
+ * 		)
+ * )
+ */
+/**
+ * Pass single numeric value or map with named breakpoints: numeric value
+ *
+ * If map provided then can be specified default (as "default" or "value" key: numeric value
+ */
+/**
+ * Keep from smallest to biggest, each value is min px breakpoint
+ * - by this breakpoints most of utility classes will be generated, also it will
+ */
+/**
+ * Keep from smallest to biggest
+ * scaling value should be calculated of (current break point min / next breakpoint min)
+ */
+/** 
+ * use dynamic assign by breakpoints or assign your custom map of 
+ */
+/**
+ * Bootstrap like
+ */
+/**
+ * Tailwind like
+ */
+/**
+ * Custom by project
+ */
+/**
+ * Directions will be prefixed
+ * so if prefix is "m" and providing "t" for top will be mt
+ * allowed directions are:
+ * ~ t -> top
+ * ~ r -> right
+ * ~ b -> bottom
+ * ~ l -> left
+ * ~ x -> left and right
+ * ~ y -> top and bottom
+ */
+/**
+ * Gutters value should be keept as an number cause it will be wrapped in val function for negative margins
+ */
+/**
+ * Columns values should contain unit if needed wrap in val to use native calculations
+ * - those values are are used for offset
+ */
+/* EXAMPLE */
+/* Font_directory:
+ * (
+		'class-name-for-family':
+ * 		(
+ * 			'src': FontFileName.extension, // or map like (FontFileName.extension, FontFileName2.otherExtension)
+ * 			'sans-serif': false, //added by default can be disabled
+ * 			'params':
+ * 			(
+ * 				'font-weight': 400,
+ * 				'font-style': 'italic',
+ * 				'font-stretch': 'condensed',
+ * 			)
+ * 		)
+ * )
+ */
+/**
+ * Pass single numeric value or map with named breakpoints: numeric value
+ *
+ * If map provided then can be specified default (as "default" or "value" key: numeric value
+ */
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Inter", Arial, Helvetica, sans-serif;
   font-size: 16rem;
   background-color: #ffffff;
   color: #000000;
@@ -1448,7 +1469,7 @@ body {
   position: fixed;
   bottom: 0;
   right: 0;
-  background-color: blue;
+  background-color: #0000ff;
   width: 30rem;
   height: 30rem;
   z-index: 100000;
@@ -1485,14 +1506,9 @@ body {
   z-index: 100000;
 }
 
-::-webkit-scrollbar {
-  display: none;
-}
-
 .js-hamburger {
-  width: 60px;
-  height: 45px;
-  position: absolute;
+  width: 27px;
+  height: 16px;
   z-index: 10002;
   -webkit-transform: rotate(0deg);
   -moz-transform: rotate(0deg);
@@ -1502,26 +1518,22 @@ body {
   -moz-transition: 0.5s ease-in-out;
   -o-transition: 0.5s ease-in-out;
   transition: 0.5s ease-in-out;
+  display: block;
   cursor: pointer;
-  top: 24rem;
-  right: 6rem;
-  display: none;
 }
-@media (max-width: 575.98px) {
+@media (max-width: 991.98px) {
   .js-hamburger {
-    display: block;
-    top: 14rem;
-    right: 12rem;
-    transform: scale(0.6);
+    width: 20px;
+    height: 13px;
   }
 }
 
 .js-hamburger span {
   display: block;
   position: absolute;
-  height: 9px;
+  height: 1px;
   width: 100%;
-  background: #ffffff;
+  background: #000000;
   border-radius: 9px;
   opacity: 1;
   left: 0;
@@ -1534,6 +1546,11 @@ body {
   -o-transition: 0.25s ease-in-out;
   transition: 0.25s ease-in-out;
 }
+@media (max-width: 991.98px) {
+  .js-hamburger span {
+    height: 1px;
+  }
+}
 
 .js-hamburger span:nth-child(1) {
   top: 0px;
@@ -1544,19 +1561,29 @@ body {
 }
 
 .js-hamburger span:nth-child(2) {
+  top: 9px;
+  -webkit-transform-origin: left center;
+  -moz-transform-origin: left center;
+  -o-transform-origin: left center;
+  transform-origin: left center;
+}
+@media (max-width: 991.98px) {
+  .js-hamburger span:nth-child(2) {
+    top: 6px;
+  }
+}
+
+.js-hamburger span:nth-child(3) {
   top: 18px;
   -webkit-transform-origin: left center;
   -moz-transform-origin: left center;
   -o-transform-origin: left center;
   transform-origin: left center;
 }
-
-.js-hamburger span:nth-child(3) {
-  top: 36px;
-  -webkit-transform-origin: left center;
-  -moz-transform-origin: left center;
-  -o-transform-origin: left center;
-  transform-origin: left center;
+@media (max-width: 991.98px) {
+  .js-hamburger span:nth-child(3) {
+    top: 12px;
+  }
 }
 
 .js-hamburger.active span:nth-child(1) {
@@ -1565,7 +1592,7 @@ body {
   -o-transform: rotate(45deg);
   transform: rotate(45deg);
   top: -3px;
-  left: 8px;
+  left: 3px;
 }
 
 .js-hamburger.active span:nth-child(2) {
@@ -1578,34 +1605,35 @@ body {
   -moz-transform: rotate(-45deg);
   -o-transform: rotate(-45deg);
   transform: rotate(-45deg);
-  top: 39px;
-  left: 8px;
+  top: 16px;
+  left: 3px;
 }
-
-.header.active .js-hamburger {
-  position: fixed;
-}
-
-.js-hamburger.active span {
-  background-color: #000000;
-}
-
-@media (max-width: 575.98px) {
-  .js-hamburger.active + .header__links {
-    transform: translateX(0%);
+@media (max-width: 991.98px) {
+  .js-hamburger.active span:nth-child(3) {
+    top: 11px;
+    left: 4px;
   }
 }
 
-/* For webkit browsers (like Safari) */
-*::-webkit-scrollbar {
-  width: 0px;
-  background: transparent; /* Make scrollbar invisible */
+.header.active .js-hamburger {
+  position: relative;
+  z-index: 2;
 }
 
+.header .js-hamburger span {
+  background-color: #ffffff;
+}
+
+/* For webkit browsers (like Safari) */
 .os-scrollbar-vertical {
   width: 12rem;
   padding: 12rem 0;
-  right: 6rem;
+  right: 0rem;
+}
+@media (max-width: 991.98px) {
+  .os-scrollbar-vertical {
+    right: 6rem;
+  }
 }
 @media (max-width: 575.98px) {
   .os-scrollbar-vertical {
@@ -1613,23 +1641,71 @@ body {
   }
 }
 .os-scrollbar-vertical .os-scrollbar-track {
-  background-color: rgba(0, 0, 0, 0.32);
+  background-color: #cccccc;
   transition: background-color 0.2s linear, opacity 0.2s linear;
 }
 .os-scrollbar-vertical .os-scrollbar-track:hover {
-  background-color: white;
+  background-color: blue;
+}
+.os-scrollbar-vertical .os-scrollbar-track:hover .os-scrollbar-handle {
+  background-color: aqua;
 }
 .os-scrollbar-vertical .os-scrollbar-handle {
-  background-color: rgba(0, 0, 0, 0.69);
+  background-color: gray;
   cursor: pointer;
 }
 .os-scrollbar-vertical .os-scrollbar-handle:hover {
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: aqua;
 }
 
+@media (max-width: 991.98px) {
+  br:not(.keep) {
+    display: none;
+  }
+}
 .text, .wyswig .text, .wyswig {
-  font-size: 18rem;
-  line-height: 24rem;
+  font-size: calc(16rem * (var(--fontsize) / 100));
+  line-height: 1.5;
+  letter-spacing: 0.03em;
+}
+@media (max-width: 991.98px) {
+  .text, .wyswig .text, .wyswig {
+    font-size: calc(12rem * (var(--fontsize) / 100));
+    letter-spacing: 0em;
+  }
+}
+.text--tiny {
+  font-size: calc(12rem * (var(--fontsize) / 100));
+  line-height: 1.666;
+  letter-spacing: 0.01em;
+}
+@media (max-width: 991.98px) {
+  .text--tiny {
+    font-size: calc(8rem * (var(--fontsize) / 100));
+    letter-spacing: 0em;
+  }
+}
+.text--small {
+  font-size: calc(14rem * (var(--fontsize) / 100));
+  line-height: 1.428;
+  letter-spacing: 0.03em;
+}
+@media (max-width: 991.98px) {
+  .text--small {
+    font-size: 10rem;
+    letter-spacing: 0em;
+  }
+}
+.text--big {
+  font-size: calc(18rem * (var(--fontsize) / 100));
+  line-height: 1.333;
+  letter-spacing: 0.01em;
+}
+@media (max-width: 991.98px) {
+  .text--big {
+    font-size: calc(14rem * (var(--fontsize) / 100));
+    letter-spacing: 0em;
+  }
 }
 
 * + .h1, .wyswig * + .h1, .wyswig * + h1,
@@ -1655,64 +1731,560 @@ body {
   * + .h4,
   .wyswig * + .h4,
   .wyswig * + h4 {
-    margin-top: 16rem;
+    margin-top: 18rem;
   }
 }
 
 .h1, .wyswig .h1, .wyswig h1 {
-  font-size: 50rem;
-  line-height: 61rem;
+  font-size: calc(56rem * (var(--fontsize) / 100));
+  line-height: 1.1;
   letter-spacing: 0.03em;
-  font-weight: 300;
 }
-@media (max-width: 575.98px) {
+@media (max-width: 991.98px) {
   .h1, .wyswig .h1, .wyswig h1 {
-    font-size: 26rem;
-    line-height: 36rem;
+    font-size: calc(40rem * (var(--fontsize) / 100));
+    line-height: 1.1;
+    letter-spacing: 0em;
   }
 }
 
 .h2, .wyswig .h2, .wyswig h2 {
-  font-size: 36rem;
-  line-height: 48rem;
-  font-weight: 500;
+  font-size: calc(42rem * (var(--fontsize) / 100));
+  line-height: 1.2857;
+  letter-spacing: 0.03em;
 }
-@media (max-width: 575.98px) {
+@media (max-width: 991.98px) {
   .h2, .wyswig .h2, .wyswig h2 {
-    font-size: 24rem;
-    line-height: 34rem;
+    font-size: calc(18rem * (var(--fontsize) / 100));
+    line-height: 1.3888;
+    letter-spacing: 0.02em;
   }
 }
 
 .h3, .wyswig .h3, .wyswig h3 {
-  font-size: 30rem;
-  line-height: 42rem;
-  font-weight: 500;
-  letter-spacing: 0.03em;
+  font-size: calc(34rem * (var(--fontsize) / 100));
+  line-height: 1.29;
+  letter-spacing: 0.01em;
 }
-@media (max-width: 575.98px) {
+@media (max-width: 991.98px) {
   .h3, .wyswig .h3, .wyswig h3 {
-    font-size: 22rem;
-    line-height: 32rem;
+    font-size: calc(16rem * (var(--fontsize) / 100));
+    letter-spacing: 0em;
   }
 }
 
 .h4, .wyswig .h4, .wyswig h4 {
-  font-size: 20rem;
-  line-height: 27rem;
-  font-weight: 600;
+  font-size: calc(22rem * (var(--fontsize) / 100));
+  line-height: 1.454;
+  letter-spacing: 0.01em;
+}
+@media (max-width: 991.98px) {
+  .h4, .wyswig .h4, .wyswig h4 {
+    font-size: calc(14rem * (var(--fontsize) / 100));
+    letter-spacing: 0em;
+  }
 }
 
 .wyswig * + p {
   margin-top: 1em;
 }
-html {
-  font-size: 0.2659574468vw;
+.wyswig ul {
+  list-style-type: none;
 }
-@media (min-width: 376px) {
-  html {
-    font-size: 0.1736111111vw;
+.wyswig ul.ul--indent {
+  padding-left: 50rem;
+}
+@media (max-width: 575.98px) {
+  .wyswig ul.ul--indent {
+    padding-left: 12rem;
   }
+}
+.wyswig ul > li {
+  position: relative;
+  padding-left: 16.5rem;
+}
+.wyswig ul > li::before {
+  content: "";
+  display: block;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 9999px;
+  background-color: currentColor;
+  position: absolute;
+  top: 0.65em;
+  left: 0rem;
+}
+
+.csl {
+  position: relative;
+}
+.csl::after {
+  content: "";
+  display: block;
+  width: 18.099rem;
+  height: 10.283rem;
+  -webkit-mask: url("../images/global/chevron.svg") no-repeat center;
+  mask: url("../images/global/chevron.svg") no-repeat center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  background-color: #1f1f1f;
+  transform-origin: 50% 25%;
+  position: absolute;
+  top: 50%;
+  right: 18.8rem;
+  transform: translateY(-50%);
+  transition: transform 0.2s linear;
+}
+@media (max-width: 575.98px) {
+  .csl::after {
+    right: 12rem;
+  }
+}
+.csl__current {
+  padding: 11rem 40rem 11rem 17rem;
+  width: 100%;
+  position: relative;
+  cursor: pointer;
+  padding-right: 30rem;
+}
+@media (max-width: 575.98px) {
+  .csl__current {
+    padding: 6rem 32rem 6rem 12rem;
+  }
+}
+.csl__current.choosed {
+  color: black;
+}
+.csl__options {
+  width: 100%;
+  max-height: 400rem;
+  margin: 11.2rem 0 0 0;
+  padding: 11rem 24rem;
+  position: absolute;
+  overflow-y: auto;
+  top: 100%;
+  left: 0;
+  right: 0rem;
+  border-radius: 10rem;
+  list-style: none;
+  background-color: #ffffff;
+  box-shadow: 0rem 3rem 6rem rgba(0, 0, 0, 0.16);
+  z-index: 100;
+  display: none;
+}
+@media (max-width: 575.98px) {
+  .csl__options {
+    padding: 6rem 12rem;
+  }
+}
+.csl__options button {
+  font-weight: 700;
+  width: 100%;
+}
+.csl__options.active, .csl__options.hover {
+  display: block;
+}
+.csl__option {
+  margin: 0;
+  padding: 4rem 10rem;
+}
+.csl__option label {
+  display: flex;
+  gap: 12rem;
+}
+.csl__option input {
+  opacity: 0;
+  width: 0rem;
+  height: 0rem;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.js-csl-container.active::after {
+  transform: rotate(180deg) translateY(-50%);
+}
+
+.input, .csl__current {
+  display: flex;
+  padding: 11rem 42rem 11rem 17rem;
+  border: 1px solid;
+  border-radius: 10rem;
+  font-size: 14rem;
+  line-height: 24rem;
+  letter-spacing: 0.03em;
+  color: #000000;
+  background-color: transparent;
+  transition: all 0.2s linear;
+}
+@media (max-width: 991.98px) {
+  .input, .csl__current {
+    font-size: 12rem;
+    line-height: 24rem;
+  }
+}
+.input::placeholder, .csl__current::placeholder {
+  font-size: 14rem;
+  line-height: 24rem;
+  letter-spacing: 0.03em;
+  color: #bebebe;
+  transition: color 0.2s linear;
+}
+@media (max-width: 991.98px) {
+  .input::placeholder, .csl__current::placeholder {
+    font-size: 12rem;
+    line-height: 24rem;
+  }
+}
+.input:hover, .csl__current:hover, .input:focus, .csl__current:focus, .input.active, .active.csl__current {
+  border-color: #0000ff;
+}
+.input:hover::placeholder, .csl__current:hover::placeholder, .input:focus::placeholder, .csl__current:focus::placeholder, .input.active::placeholder, .active.csl__current::placeholder {
+  color: #bebebe;
+}
+.input.error, .error.csl__current {
+  border-width: 2px;
+  border-color: #F6292E;
+}
+* + .input__container {
+  margin-top: 15rem;
+}
+.input__container {
+  position: relative;
+}
+.input__container .input, .input__container .csl__current {
+  width: 100%;
+}
+.input__clear {
+  width: 25rem;
+  height: 25rem;
+  border-radius: 9999px;
+  position: absolute;
+  top: 50%;
+  right: 17rem;
+  transform: translateY(-50%);
+  background-color: #F6292E;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  display: none !important;
+}
+.input__clear::before {
+  content: "";
+  display: block;
+  width: 46.63%;
+  height: 46.63%;
+  -webkit-mask: url("../images/global/x.svg") no-repeat center;
+  mask: url("../images/global/x.svg") no-repeat center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  background-color: red;
+}
+.input__error {
+  font-size: 12rem;
+  line-height: 24rem;
+  letter-spacing: 0.03em;
+  color: red;
+  position: absolute;
+  bottom: -3rem;
+  left: 0rem;
+  width: 100%;
+  transform: translateY(100%);
+}
+.input__error--checkbox {
+  text-wrap: nowrap;
+  bottom: -2.5rem;
+}
+.input__error--bgwhite {
+  background-color: #ffffff;
+  border-radius: 8rem;
+  padding: 3rem 12rem;
+  width: auto;
+}
+@media (max-width: 991.98px) {
+  .input__error {
+    font-size: 8rem;
+    line-height: 14rem;
+    letter-spacing: 0em;
+  }
+}
+
+textarea {
+  resize: vertical !important;
+  overflow: auto !important;
+}
+
+.checkbox__container:has(input.error) {
+  margin-bottom: 16rem;
+}
+
+.js-input-container:has(.input.error, .error.csl__current) {
+  margin-bottom: 36rem;
+}
+
+@media (max-width: 575.98px) {
+  body.force-fix-input-text-size-mobile .input, body.force-fix-input-text-size-mobile .csl__current {
+    font-size: 16px !important;
+    line-height: 1.2;
+  }
+}
+
+.checkbox {
+  border: 1px solid #000000;
+  border-radius: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: border-color 0.2s linear;
+  width: 20rem;
+  height: 20rem;
+}
+.checkbox::before {
+  content: "";
+  display: block;
+  width: 68.19%;
+  height: 49.8%;
+  -webkit-mask: url("../images/global/checkmark.svg") no-repeat center;
+  mask: url("../images/global/checkmark.svg") no-repeat center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  background-color: #0000ff;
+  opacity: 0;
+  transition: opacity 0.2s linear;
+}
+.checkbox__container {
+  display: flex;
+  align-items: center;
+  gap: 13rem;
+  position: relative;
+  cursor: pointer;
+}
+.checkbox__container:has(input.error) .checkbox {
+  border-width: 2px;
+  border-color: #F6292E;
+}
+.checkbox__container input {
+  opacity: 0;
+  width: 0rem;
+  height: 0rem;
+  -webkit-appearance: none;
+  appearance: none;
+  position: absolute;
+}
+.checkbox__text {
+  font-size: 13rem;
+  line-height: 15rem;
+}
+
+input:checked ~ .checkbox {
+  border-color: #0000ff;
+}
+input:checked ~ .checkbox::before {
+  opacity: 1;
+}
+
+.button {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16rem 35rem;
+  border-radius: 10rem;
+  background-color: #ffffff;
+  font-size: 16rem;
+  line-height: 20rem;
+  letter-spacing: 0.02em;
+  font-weight: 500;
+  text-align: center;
+  color: #000000;
+  border: 1px solid #ffffff;
+  transition: all 0.2s linear;
+}
+@media (max-width: 991.98px) {
+  .button {
+    padding: 13rem 24rem;
+  }
+}
+.button:hover:not(.button--nohover) {
+  background-color: transparent;
+  color: #ffffff;
+}
+
+.ajax-submit-loader {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 16rem;
+  height: 16rem;
+  margin-left: 10rem;
+  border: 2rem solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: ajax-submit-loader-spin 0.7s linear infinite;
+}
+
+@keyframes ajax-submit-loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ajax-submit-loader {
+    animation-duration: 1.4s;
+  }
+}
+@media (max-width: 991.98px) {
+  .at-mobile-1 {
+    order: 1;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .at-mobile-2 {
+    order: 2;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .at-mobile-3 {
+    order: 3;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .at-mobile-4 {
+    order: 4;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .at-mobile-5 {
+    order: 5;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .at-mobile-6 {
+    order: 6;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .at-mobile-7 {
+    order: 7;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .at-mobile-8 {
+    order: 8;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .at-mobile-9 {
+    order: 9;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .at-mobile-10 {
+    order: 10;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .at-mobile-11 {
+    order: 11;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .at-mobile-12 {
+    order: 12;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .at-mobile-13 {
+    order: 13;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .at-mobile-14 {
+    order: 14;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .at-mobile-15 {
+    order: 15;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .at-mobile-16 {
+    order: 16;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .at-mobile-17 {
+    order: 17;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .at-mobile-18 {
+    order: 18;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .at-mobile-19 {
+    order: 19;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .at-mobile-20 {
+    order: 20;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .desktop {
+    display: none;
+  }
+}
+
+@media (min-width: 992px) {
+  .mobile {
+    display: none;
+  }
+}
+
+@media (min-width: 992px) {
+  .hideondesktop {
+    display: none !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .hideonmobile {
+    display: none !important;
+  }
+}
+
+body:not(.fontsize--100) .on-zoom-100 {
+  display: none !important;
+}
+
+body:not(.fontsize--150) .on-zoom-150 {
+  display: none !important;
+}
+
+html {
+  font-size: 0.254453125vw;
 }
 @media (min-width: 576px) {
   html {
@@ -1765,38 +2337,6 @@ html {
   display: unset;
 }
 
-@media (min-width: 376px) {
-  .d-xs-block {
-    display: block;
-  }
-  .d-xs-inline {
-    display: inline;
-  }
-  .d-xs-inline-block {
-    display: inline-block;
-  }
-  .d-xs-flex {
-    display: flex;
-  }
-  .d-xs-inline-flex {
-    display: inline-flex;
-  }
-  .d-xs-grid {
-    display: grid;
-  }
-  .d-xs-inline-grid {
-    display: inline-grid;
-  }
-  .d-xs-none {
-    display: none;
-  }
-  .d-xs-table {
-    display: table;
-  }
-  .d-xs-unset {
-    display: unset;
-  }
-}
 @media (min-width: 576px) {
   .d-sm-block {
     display: block;
@@ -1969,89 +2509,6 @@ html {
   align-items: space-around;
 }
 
-@media (min-width: 376px) {
-  .flex-xs-row {
-    flex-direction: row;
-  }
-  .flex-xs-row-reverse {
-    flex-direction: row-reverse;
-  }
-  .flex-xs-column {
-    flex-direction: column;
-  }
-  .flex-xs-column-reverse {
-    flex-direction: column-reverse;
-  }
-  .flex-xs-wrap {
-    flex-wrap: wrap;
-  }
-  .flex-xs-wrap-reverse {
-    flex-wrap: wrap-reverse;
-  }
-  .flex-xs-nowrap {
-    flex-wrap: nowrap;
-  }
-  .flex-xs-0-0-0 {
-    flex: 0 0 0;
-  }
-  .flex-xs-0-0-auto {
-    flex: 0 0 auto;
-  }
-  .flex-xs-0-1-0 {
-    flex: 0 1 0;
-  }
-  .flex-xs-0-1-auto {
-    flex: 0 1 auto;
-  }
-  .flex-xs-1-0-0 {
-    flex: 1 0 0;
-  }
-  .flex-xs-1-0-auto {
-    flex: 1 0 auto;
-  }
-  .flex-xs-1-1-0 {
-    flex: 1 1 0;
-  }
-  .flex-xs-1-1-auto {
-    flex: 1 1 auto;
-  }
-  .justify-content-xs-start {
-    justify-content: flex-start;
-  }
-  .justify-content-xs-end {
-    justify-content: flex-end;
-  }
-  .justify-content-xs-center {
-    justify-content: center;
-  }
-  .justify-content-xs-between {
-    justify-content: space-between;
-  }
-  .justify-content-xs-around {
-    justify-content: space-around;
-  }
-  .align-items-xs-start {
-    align-items: flex-start;
-  }
-  .align-items-xs-end {
-    align-items: flex-end;
-  }
-  .align-items-xs-center {
-    align-items: center;
-  }
-  .align-items-xs-baseline {
-    align-items: baseline;
-  }
-  .align-items-xs-stretch {
-    align-items: stretch;
-  }
-  .align-items-xs-between {
-    align-items: space-between;
-  }
-  .align-items-xs-around {
-    align-items: space-around;
-  }
-}
 @media (min-width: 576px) {
   .flex-sm-row {
     flex-direction: row;
@@ -2218,228 +2675,6 @@ html {
     align-items: space-around;
   }
 }
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-Thin.ttf") format("ttf");
-  font-weight: 100;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-ThinItalic.ttf") format("ttf");
-  font-weight: 100;
-  font-style: italic;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-ExtraLight.ttf") format("ttf");
-  font-weight: 200;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-ExtraLightItalic.ttf") format("ttf");
-  font-weight: 200;
-  font-style: italic;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-Light.ttf") format("ttf");
-  font-weight: 300;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-LightItalic.ttf") format("ttf");
-  font-weight: 300;
-  font-style: italic;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-Regular.ttf") format("ttf");
-  font-weight: 400;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-Italic.ttf") format("ttf");
-  font-weight: 400;
-  font-style: italic;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-Medium.ttf") format("ttf");
-  font-weight: 500;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-MediumItalic.ttf") format("ttf");
-  font-weight: 500;
-  font-style: italic;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-SemiBold.ttf") format("ttf");
-  font-weight: 600;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-SemiBoldItalic.ttf") format("ttf");
-  font-weight: 600;
-  font-style: italic;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-Bold.ttf") format("ttf");
-  font-weight: 700;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-BoldItalic.ttf") format("ttf");
-  font-weight: 700;
-  font-style: italic;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-Black.ttf") format("ttf");
-  font-weight: 900;
-  font-style: normal;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-BlackItalic.ttf") format("ttf");
-  font-weight: 900;
-  font-style: italic;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-SemiCondensedThin.ttf") format("ttf");
-  font-weight: 100;
-  font-style: normal;
-  font-stretch: semi-condensed;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-SemiCondensedThinItalic.ttf") format("ttf");
-  font-weight: 100;
-  font-style: italic;
-  font-stretch: semi-condensed;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-SemiCondensedExtraLight.ttf") format("ttf");
-  font-weight: 200;
-  font-style: normal;
-  font-stretch: semi-condensed;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-SemiCondensedExtraLightItalic.ttf") format("ttf");
-  font-weight: 200;
-  font-style: italic;
-  font-stretch: semi-condensed;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-SemiCondensedLight.ttf") format("ttf");
-  font-weight: 300;
-  font-style: normal;
-  font-stretch: semi-condensed;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-SemiCondensedLightItalic.ttf") format("ttf");
-  font-weight: 300;
-  font-style: italic;
-  font-stretch: semi-condensed;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-SemiCondensed.ttf") format("ttf");
-  font-weight: 400;
-  font-style: normal;
-  font-stretch: semi-condensed;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-SemiCondensedItalic.ttf") format("ttf");
-  font-weight: 400;
-  font-style: italic;
-  font-stretch: semi-condensed;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-SemiCondensedMedium.ttf") format("ttf");
-  font-weight: 500;
-  font-style: normal;
-  font-stretch: semi-condensed;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-SemiCondensedMediumItalic.ttf") format("ttf");
-  font-weight: 500;
-  font-style: italic;
-  font-stretch: semi-condensed;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-SemiCondensedSemiBold.ttf") format("ttf");
-  font-weight: 600;
-  font-style: normal;
-  font-stretch: semi-condensed;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-SemiCondensedSemiBoldItalic.ttf") format("ttf");
-  font-weight: 600;
-  font-style: italic;
-  font-stretch: semi-condensed;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-SemiCondensedBold.ttf") format("ttf");
-  font-weight: 700;
-  font-style: normal;
-  font-stretch: semi-condensed;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-SemiCondensedBoldItalic.ttf") format("ttf");
-  font-weight: 700;
-  font-style: italic;
-  font-stretch: semi-condensed;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-SemiCondensedExtraBold.ttf") format("ttf");
-  font-weight: 800;
-  font-style: normal;
-  font-stretch: semi-condensed;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-SemiCondensedExtraBoldItalic.ttf") format("ttf");
-  font-weight: 800;
-  font-style: italic;
-  font-stretch: semi-condensed;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-SemiCondensedBlack.ttf") format("ttf");
-  font-weight: 900;
-  font-style: normal;
-  font-stretch: semi-condensed;
-}
-@font-face {
-  font-family: "Noto Sans SemiCondensed", sans-serif;
-  src:  url("/wp-content/themes/customtheme/assets/fonts/Noto Sans SemiCondensed/NotoSans-SemiCondensedBlackItalic.ttf") format("ttf");
-  font-weight: 900;
-  font-style: italic;
-  font-stretch: semi-condensed;
-}
 .row {
   margin-right: -16rem;
   margin-left: -16rem;
@@ -2477,35 +2712,6 @@ html {
 .row.gutter-20 > [class*=col-] {
   padding-right: 20rem;
   padding-left: 20rem;
-}
-@media (min-width: 376px) {
-  .row.gutter-xs-0 {
-    margin-right: 0rem;
-    margin-left: 0rem;
-  }
-  .row.gutter-xs-0 > .col,
-  .row.gutter-xs-0 > [class*=col-] {
-    padding-right: 0rem;
-    padding-left: 0rem;
-  }
-  .row.gutter-xs-16 {
-    margin-right: -16rem;
-    margin-left: -16rem;
-  }
-  .row.gutter-xs-16 > .col,
-  .row.gutter-xs-16 > [class*=col-] {
-    padding-right: 16rem;
-    padding-left: 16rem;
-  }
-  .row.gutter-xs-20 {
-    margin-right: -20rem;
-    margin-left: -20rem;
-  }
-  .row.gutter-xs-20 > .col,
-  .row.gutter-xs-20 > [class*=col-] {
-    padding-right: 20rem;
-    padding-left: 20rem;
-  }
 }
 @media (min-width: 576px) {
   .row.gutter-sm-0 {
@@ -2650,78 +2856,6 @@ html {
   max-width: 100%;
 }
 
-@media (min-width: 376px) {
-  .col-xs-1 {
-    width: 100%;
-    flex: 0 0 8.3333%;
-    max-width: 8.3333%;
-  }
-  .col-xs-1-10 {
-    width: 100%;
-    flex: 0 0 10%;
-    max-width: 10%;
-  }
-  .col-xs-2 {
-    width: 100%;
-    flex: 0 0 16.6667%;
-    max-width: 16.6667%;
-  }
-  .col-xs-1-5 {
-    width: 100%;
-    flex: 0 0 20%;
-    max-width: 20%;
-  }
-  .col-xs-3 {
-    width: 100%;
-    flex: 0 0 25%;
-    max-width: 25%;
-  }
-  .col-xs-4 {
-    width: 100%;
-    flex: 0 0 33.3333%;
-    max-width: 33.3333%;
-  }
-  .col-xs-5 {
-    width: 100%;
-    flex: 0 0 41.6667%;
-    max-width: 41.6667%;
-  }
-  .col-xs-6 {
-    width: 100%;
-    flex: 0 0 50%;
-    max-width: 50%;
-  }
-  .col-xs-7 {
-    width: 100%;
-    flex: 0 0 58.3333%;
-    max-width: 58.3333%;
-  }
-  .col-xs-8 {
-    width: 100%;
-    flex: 0 0 66.6667%;
-    max-width: 66.6667%;
-  }
-  .col-xs-9 {
-    width: 100%;
-    flex: 0 0 75%;
-    max-width: 75%;
-  }
-  .col-xs-10 {
-    width: 100%;
-    flex: 0 0 83.3333%;
-    max-width: 83.3333%;
-  }
-  .col-xs-11 {
-    width: 100%;
-    flex: 0 0 91.6667%;
-    max-width: 91.6667%;
-  }
-  .col-xs-12 {
-    width: 100%;
-    flex: 0 0 100%;
-    max-width: 100%;
-  }
-}
 @media (min-width: 576px) {
   .col-sm-1 {
     width: 100%;
@@ -2922,50 +3056,6 @@ html {
   margin-left: 100%;
 }
 
-@media (min-width: 376px) {
-  .offset-xs-1 {
-    margin-left: 8.3333%;
-  }
-  .offset-xs-1-10 {
-    margin-left: 10%;
-  }
-  .offset-xs-2 {
-    margin-left: 16.6667%;
-  }
-  .offset-xs-1-5 {
-    margin-left: 20%;
-  }
-  .offset-xs-3 {
-    margin-left: 25%;
-  }
-  .offset-xs-4 {
-    margin-left: 33.3333%;
-  }
-  .offset-xs-5 {
-    margin-left: 41.6667%;
-  }
-  .offset-xs-6 {
-    margin-left: 50%;
-  }
-  .offset-xs-7 {
-    margin-left: 58.3333%;
-  }
-  .offset-xs-8 {
-    margin-left: 66.6667%;
-  }
-  .offset-xs-9 {
-    margin-left: 75%;
-  }
-  .offset-xs-10 {
-    margin-left: 83.3333%;
-  }
-  .offset-xs-11 {
-    margin-left: 91.6667%;
-  }
-  .offset-xs-12 {
-    margin-left: 100%;
-  }
-}
 @media (min-width: 576px) {
   .offset-sm-1 {
     margin-left: 8.3333%;
@@ -3054,6 +3144,14 @@ html {
     margin-left: 100%;
   }
 }
+.color-transparent {
+  color: transparent;
+}
+
+.color-currentColor {
+  color: currentColor;
+}
+
 .color-white {
   color: #ffffff;
 }
@@ -3062,9 +3160,26 @@ html {
   color: #000000;
 }
 
+.color-red {
+  color: #F6292E;
+}
+
+.color-green {
+  color: #00ff00;
+}
+
+.color-blue {
+  color: #0000ff;
+}
+
 :root {
+  --color-transparent: transparent;
+  --color-currentColor: currentColor;
   --color-white: #ffffff;
   --color-black: #000000;
+  --color-red: #F6292E;
+  --color-green: #00ff00;
+  --color-blue: #0000ff;
 }
 
 .bg-pos-left {

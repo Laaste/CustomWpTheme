@@ -173,13 +173,18 @@ add_action('wp_head', 'add_meta_format_detection');
 add_filter('wp_img_tag_add_auto_sizes', '__return_false');
 /* wp_img_tag_add_auto_sizes removes <style>img:is([sizes="auto" i], [sizes^="auto," i]) { contain-intrinsic-size: 3000px 1500px }</style>  if wordpress media.php was loaded */
 
-function setBaseUrlForJsInFooter()
+function echoBaseUrlInFooter()
 {
 	$baseUrl = esc_url(site_url());
+	$currentId = currentID();
 
-	echo "<script type='text/javascript'>var baseUrl = '{$baseUrl}';</script>";
+	echo "
+	<script type='text/javascript'>
+		var baseUrl = '{$baseUrl}';
+		var currentId = {$currentId};
+	</script>";
 }
-add_action('wp_footer', 'setBaseUrlForJsInFooter', 5);
+add_action('wp_footer', 'echoBaseUrlInFooter', 5);
 
 if(WP_DEBUG)
 {

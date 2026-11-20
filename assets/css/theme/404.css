@@ -1,0 +1,131 @@
+/*!*************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[0].use[1]!./node_modules/sass-loader/dist/cjs.js!./assets/scss/theme/404.scss ***!
+  \*************************************************************************************************************************************************/
+/**
+ * Keep from smallest to biggest, each value is min px breakpoint
+ * - by this breakpoints most of utility classes will be generated, also it will
+ */
+/**
+ * Keep from smallest to biggest
+ * scaling value should be calculated of (current break point min / next breakpoint min)
+ */
+/** 
+ * use dynamic assign by breakpoints or assign your custom map of 
+ */
+/**
+ * Bootstrap like
+ */
+/**
+ * Tailwind like
+ */
+/**
+ * Custom by project
+ */
+/**
+ * Directions will be prefixed
+ * so if prefix is "m" and providing "t" for top will be mt
+ * allowed directions are:
+ * ~ t -> top
+ * ~ r -> right
+ * ~ b -> bottom
+ * ~ l -> left
+ * ~ x -> left and right
+ * ~ y -> top and bottom
+ */
+/**
+ * Gutters value should be keept as an number cause it will be wrapped in val function for negative margins
+ */
+/**
+ * Columns values should contain unit if needed wrap in val to use native calculations
+ * - those values are are used for offset
+ */
+/* EXAMPLE */
+/* Font_directory:
+ * (
+		'class-name-for-family':
+ * 		(
+ * 			'src': FontFileName.extension, // or map like (FontFileName.extension, FontFileName2.otherExtension)
+ * 			'sans-serif': false, //added by default can be disabled
+ * 			'params':
+ * 			(
+ * 				'font-weight': 400,
+ * 				'font-style': 'italic',
+ * 				'font-stretch': 'condensed',
+ * 			)
+ * 		)
+ * )
+ */
+/**
+ * Pass single numeric value or map with named breakpoints: numeric value
+ *
+ * If map provided then can be specified default (as "default" or "value" key: numeric value
+ */
+.four-o-four {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin: 148rem 129rem 131rem 129rem;
+}
+@media (max-width: 991.98px) {
+  .four-o-four {
+    margin: 88rem 27rem 71rem 27rem;
+  }
+}
+@media (max-width: 575.98px) {
+  .four-o-four {
+    margin-top: 78rem;
+  }
+}
+.four-o-four__title {
+  font-size: 42rem;
+  line-height: 54rem;
+  letter-spacing: 0.03em;
+  color: #000000;
+  font-weight: 700;
+  text-align: center;
+}
+@media (max-width: 991.98px) {
+  .four-o-four__title {
+    font-size: 18rem;
+    line-height: 28rem;
+    letter-spacing: 0.02em;
+  }
+}
+@media (max-width: 991.98px) {
+  * + .four-o-four__excerpt {
+    margin-top: 19rem;
+  }
+}
+.four-o-four__excerpt {
+  width: 659rem;
+  font-size: 16rem;
+  line-height: 24rem;
+  letter-spacing: 0.03em;
+  color: #000000;
+  text-align: center;
+}
+.four-o-four__excerpt--excerptwide {
+  width: 789rem;
+}
+@media (max-width: 991.98px) {
+  .four-o-four__excerpt {
+    width: auto;
+    font-size: 12rem;
+    line-height: 18rem;
+    letter-spacing: 0em;
+  }
+}
+* + .four-o-four__button {
+  margin-top: 48rem;
+}
+@media (max-width: 575.98px) {
+  * + .four-o-four__button {
+    margin-top: 24rem;
+  }
+}
+.four-o-four__button {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}

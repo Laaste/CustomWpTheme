@@ -1,10 +1,10 @@
-import $ from 'jquery';
+import $, { ajaxSettings, param } from 'jquery';
 import 'slick-carousel-latest';
 // import '../vendor/bootstrap-datepicker-1.9.0/bootstrap-datepicker.min.js';
 // import '../vendor/bootstrap-datepicker-1.9.0/bootstrap-datepicker.pl.min.js';
 // import 'sharer.js';
 // import AOS from 'aos';
-// import tippy, { createSingleton } from 'tippy.js';
+import tippy, { createSingleton } from 'tippy.js';
 
 const projectNameSpace = 'customproject';
 
@@ -308,17 +308,17 @@ function changeScrollState(osInstance, state){
 }
 
 // If options object is omitted, OverlayScrollbars won't work.
-var osInstanceBody = OverlayScrollbars(document.body,
-{
-	overflow: {
-		x: 'hidden'
-	},
-	scrollbars: {
-		autoHide: 'scroll',
-		autoHide: 'never',
-		clickScroll: true
-	},
-});
+// var osInstanceBody = OverlayScrollbars(document.body,
+// {
+// 	overflow: {
+// 		x: 'hidden'
+// 	},
+// 	scrollbars: {
+// 		autoHide: 'scroll',
+// 		autoHide: 'never',
+// 		clickScroll: true
+// 	},
+// });
 
 function makeScrollbars(elementSelector = '.js-scrollbar')
 {
@@ -386,6 +386,13 @@ function makeScrollbars(elementSelector = '.js-scrollbar')
 	}
 }
 
+function addToBodyClassWithSuffix(baseClass, suffix)
+{
+	var body = $('body');
+
+	body.addClass(baseClass + suffix);
+}
+
 function changeFontSize()
 {
 	var fontSize = getCookie('fontsize');
@@ -424,17 +431,19 @@ function manageOnDraw()
 
 	makeScrollbars();
 
-	adjustItemsHeightInColumns(
-	{
-		containerSelector: '.js-adjust-items-height',
-		toAdjustSelectors: [
-			'.js-adjust-items-height-title',
-			'.js-adjust-items-height-text',
-		],
-		columnsInRowLg: 3,
-		columnsInRowMd: false,
-		columnsInRowSm: false,
-	});
+	// adjustItemsHeightInColumns(
+	// {
+	// 	containerSelector: '.js-adjust-items-height',
+	// 	toAdjustSelectors: [
+	// 		'.js-adjust-items-height-title',
+	// 		'.js-adjust-items-height-text',
+	// 	],
+	// 	columnsInRowLg: false,
+	// 	columnsInRowMd: false,
+	// 	columnsInRowSm: false,
+	// });
+
+	///////////////
 }
 
 //////////////////////////////
@@ -517,9 +526,11 @@ var menuOpen = false;
 
 $(document).on('click', '.js-hamburger', function (e)
 {
+	var $that = $(this);
+
 	menuOpen = !menuOpen;
 
-	$(this).toggleClass('active');
+	$that.toggleClass('active');
 
 	$('body').toggleClass('overflow-hidden');
 
@@ -534,6 +545,27 @@ $(document).on('click', '.js-hamburger', function (e)
 	}
 });
 
+$(document).on('click', '.js-header-expand-close', function(e)
+{
+	var $headerExpand = $('.js-header-links');
+	$headerExpand.removeClass('active');
+	$('.header').removeClass('active');
+	$('.js-hamburger').removeClass('active');
+	$('body').removeClass('overflow-hidden');
+	
+	var $headerList = $('.js-header-list');
+	var $headerContent = $('.js-header-content');
+
+	$headerList.show();
+	$headerContent.hide();
+	$('.js-header-parent').removeClass('active');
+
+	if(typeof osInstanceBody != 'undefined')
+	{
+		toggleScrollState(osInstanceBody, true);
+	}
+});
+
 $(document).on('click', '.js-scroll', function (e){
 	e.preventDefault();
 	e.stopPropagation();
@@ -543,6 +575,8 @@ $(document).on('click', '.js-scroll', function (e){
 
 	if(targetObj.length){
 		var offset = targetObj.offset().top;
+
+		if(target == '.js-test-ride-page') offset -= 50;
 
 		$('html, body').animate({
 			scrollTop: offset
@@ -625,7 +659,6 @@ $('.js-scroll-to-next').on('click', function(e)
 });
 
 var scrolling = false;
-var scrolledToFirstError = false;
 
 /**
  * Scroll do elementu z opcjonalnym kontenerem i czasem animacji
@@ -682,6 +715,7 @@ function scrollToEl(targetObj, container = $('html, body'), duration = 500, offs
 
 	scrolling = false;
 }
+
 
 $(function(){
 	var scrollTo = getCookie('scrollTo');
@@ -1132,13 +1166,6 @@ $(document).on("click", function(event)
 //#endregion cslSelect
 ////////////////////////////////
 
-function addToBodyClassWithSuffix(baseClass, suffix)
-{
-	var body = $('body');
-
-	body.addClass(baseClass + suffix);
-}
-
 function removeFromBodyClassesWithSuffix(baseClass, exceptionSuffixes = [])
 {
 	var body = $('body');
@@ -1193,183 +1220,153 @@ $(function()
 /////////////////////////
 //#region Slick
 //
+var isDraggingOnSlider = false;
 
-// var introModelSliders = [];
-// var introModelSliderNavs = [];
+var introSliders = [];
 
-// var sliders = [];
+var sliders = [];
 
-// function bootSlicks()
-// {
-// 	// bootIntroModelSlider();
+function bootSlicks()
+{
+	bootIntroSliders();
 
-// 	sliders = [
-// 		// introModelSliders,
-// 		// introModelSliderNavs,
-// 	];
-// }
+	sliders = {
+		'introSliders': introSliders,
+	};
+}
 
+function bootIntroSliders()
+{
+	var $sliders = $('.js-intro-slider');
 
-// var $introModelSlider;
-// var $introModelSliderNav;
+	if($sliders.length)
+	{
+		$sliders.each(function(e)
+		{
+			var slider = this;
+			introSliders.push(slider);
 
-// function bootIntroModelSlider()
-// {
-// 	var $sliders = $('.js-intro-model-slider');
+			var $slider = $(slider);
+			var $sliderContainer = $slider.closest('.js-intro-slider-container');
+			var $sliderNav = $sliderContainer.find('.js-intro-slider-nav');
+			var slidesCount = $sliderContainer.find('.js-intro-slide').length;
 
-// 	if($sliders.length)
-// 	{
-// 		$sliders.each(function(e)
-// 		{
-// 			var slider = this;
-//			introModelSliders.push(slider);
-//
-//			var $slider = $(slider);
-// 			var $sliderContainer = $slider.closest('.js-intro-model-slider-container');
-// 			var $progressBar = $sliderContainer.find('.js-intro-model-slider-progress');
-// 			var $itemLink = $sliderContainer.find('.js-intro-model-slider-item-link');
-// 			var $nav = $sliderContainer.find('.js-intro-model-slider-nav');
+			var $introSlider = $slider.slick(
+			{
+				arrows: false,
+				dots: false,
+				infinite: false,
+				slidesToShow: 1,
+				variableWidth: false,
+				adaptiveHeight: true,
+				autoplay: true,
+				autoplaySpeed: 28000,
+				lazyLoad: 'anticipated',
+				responsive: [
+					{
+						breakpoint: 991,
+						settings: {
+							slidesToShow: 1,
+						}
+					}
+				]
+			});
 
-			// introModelSliderNavs.push($nav.eq(0));
+			var $sliderNavButtons = $sliderNav.find('.js-tabs-button');
+			var $currentNavButton = $sliderNavButtons.filter('active');
 
-// 			if($nav.length)
-// 			{
-// 				$introModelSliderNav = $nav.slick(
-// 				{
-// 					arrows: false,
-// 					dots: false,
-// 					infinite: true,
-// 					slidesToShow: 1,
-// 					adaptiveHeight: true,
-// 					autoplay: false,
-// 					draggable: false,
-// 					swipe: false,
-// 					responsive: [
-// 						{
-// 							breakpoint: 576,
-// 							settings:
-// 							{
-// 								adaptiveHeight: true
-// 							}
-// 						}
-// 					]
-// 				});
-// 			}
+			// var $prevButton = $currentNavButton.find('.js-base-slider-prev');
+			// var $nextButton = $currentNavButton.find('.js-base-slider-next');
 
-// 			$introModelSlider = $slider.slick(
-// 			{
-// 				arrows: false,
-// 				dots: false,
-// 				infinite: true,
-// 				slidesToShow: 1,
-// 				adaptiveHeight: false,
-// 				autoplay: true,
-// 				autoplaySpeed: 5000,
-// 				lazyLoad: 'anticipated'
-// 			});
+			// $prevButton.on('click', function()
+			// {
+			// 	$introSlider.slick('slickPrev');
+			// });
 
-// 			$sliderContainer.find('.js-intro-model-slider-prev').on('click', function()
-// 			{
-// 				$introModelSlider.slick('slickPrev');
-// 			});
+			// $nextButton.on('click', function()
+			// {
+			// 	$introSlider.slick('slickNext');
+			// });
 
-// 			$sliderContainer.find('.js-intro-model-slider-next').on('click', function()
-// 			{
-// 				$introModelSlider.slick('slickNext');
-// 			});
+			$introSlider.on('afterChange', function(event, slick, index)
+			{
+				// updateNavState(slick, $prevButton, $nextButton);
+				if(! blockOnChangeIntroSlider)
+				{
+					$sliderNavButtons.removeClass('active');
+					$currentNavButton = $sliderNavButtons.eq(index).addClass('active');
 
-// 			var slidesCount = $slider.attr('data-slides-count');
+					var $tabsContainer = $sliderNavButtons.closest('.js-tabs-container');
+					var $tabs = $tabsContainer.find('.js-tabs-item');
 
-// 			function updateItemLink(index)
-// 			{
-// 				if(! $itemLink.length) return;
+					var $allTabsVideos = $tabs.find('[data-lazy-video-ready]')
+					$allTabsVideos.attr('data-lazy-video-ready', 'false');
 
-// 				var $current = $slider.find('.slick-slide[data-slick-index="' + index + '"]');
-// 				var link = $current.find('.js-intro-model-slider-item').attr('data-slide-link');
+					var $newCurrentTab = $tabs.eq(index);
+					var $currentTabVideos = $newCurrentTab.find('[data-lazy-video-ready]')
+					$currentTabVideos.attr('data-lazy-video-ready', 'true');
 
-// 				if(link)
-// 				{
-// 					$itemLink.removeClass('invisible');
-// 				}
-// 				else
-// 				{
-// 					$itemLink.addClass('invisible');
-// 				}
+					processLazyVideoScroll();
+				}
+			});
+		});
+	}
+}
 
-// 				$itemLink.attr('href', link);
-// 			}
+function currentSlideInLoop(currentSlide, delta, totalFrames)
+{
+	if(totalFrames <= 0)
+		return 0;
 
-// 			function updateProgressBar(index)
-// 			{
-// 				if(!$progressBar.length) return;
+	let direction = delta > 0 ? -1 : 1;
+	let newSlide = (currentSlide + direction + totalFrames) % totalFrames;
 
-// 				var progress = (index == 0 && slidesCount == 1)
-// 					? 100
-// 					: (index / (slidesCount - 1)) * 100;
+	return newSlide;
+}
 
-// 				$progressBar.css('width', progress + '%');
-// 			}
+function updateNavState(slick, $prevButton, $nextButton)
+{
+	var current = slick.currentSlide;
+	var max = slick.slideCount - slick.options.slidesToShow;
 
-// 			updateItemLink(0);
-// 			updateProgressBar(0);
+	if(current > 0)
+	{
+		$prevButton.addClass('active');
+	}
+	else
+	{
+		$prevButton.removeClass('active');
+	}
 
-// 			$introModelSlider.on('afterChange', function(event, slick, index)
-// 			{
-// 				if($introModelSliderNav)
-// 				{
-// 					$introModelSliderNav.slick('slickGoTo', index);
-// 				}
+	if(current < max)
+	{
+		$nextButton.addClass('active');
+	}
+	else
+	{
+		$nextButton.removeClass('active');
+	}
+}
 
-// 				updateItemLink(index);
-// 				updateProgressBar(index);
-// 			});
-// 		});
-// 	}
-// }
+function refreshSlicks()
+{
+	for(var [sliderType, sliderEntries] of Object.entries(sliders))
+	{
+		if(sliderEntries.length)
+		{
+			sliderEntries.forEach(function(sliderEl)
+			{
+				var $slider = $(sliderEl);
 
-// function updateNavState(slick, $prevButton, $nextButton)
-// {
-// 	var current = slick.currentSlide;
-// 	var max = slick.slideCount - slick.options.slidesToShow;
-
-// 	if(current > 0)
-// 	{
-// 		$prevButton.addClass('active');
-// 	}
-// 	else
-// 	{
-// 		$prevButton.removeClass('active');
-// 	}
-
-// 	if(current < max)
-// 	{
-// 		$nextButton.addClass('active');
-// 	}
-// 	else
-// 	{
-// 		$nextButton.removeClass('active');
-// 	}
-// }
-
-// function refreshSlicks()
-// {
-// 	sliders.forEach(function($sliderType)
-// 	{
-// 		if($sliderType.length)
-// 		{
-// 			$sliderType.each(function(sliderEl)
-// 			{
-// 				var $slider = $(sliderEl);
-
-// 				if($slider.length
-// 				&& $slider.hasClass('slick-initialized'))
-// 				{
-// 					$slider.slick('refresh');
-// 				}
-// 			});
-// 		}
-// 	});
-// }
+				if($slider.length
+				&& $slider.hasClass('slick-initialized'))
+				{
+					$slider.slick('refresh');
+				}
+			});
+		}
+	}
+}
 
 //
 //#endregion Slick
@@ -1394,67 +1391,6 @@ $(document).on('click', '.js-video-poster', function(e)
 		}
 	}
 });
-
-
-// var tippySettings = {
-// 	allowHTML: true,
-// 	interactive: true,
-// 	placement: 'bottom-start',
-// 	// showOnCreate: true,
-// 	// trigger: 'manual',
-// 	arrow: false,
-// 	trigger: 'mouseenter focus',
-// 	onCreate(instance) {
-// 		// instance.show();
-// 		if(!instance.popper.querySelector('.js-tippy-close')){
-// 			if(instance.popper.querySelector('.footer__top__newsletter__popup')){
-// 				var close = $('<span>')
-// 					.addClass('close js-tippy-close')
-// 					.html('&times;')[0];
-	
-// 				instance.popper.querySelector('.footer__top__newsletter__popup').appendChild(close);
-// 			} else {
-// 				instance.setContent(this.content + '<span class="close js-tippy-close">&times;</span>');
-// 			}
-// 		}
-
-// 		instance.popper.querySelector('.js-tippy-close').addEventListener('click', () => {
-// 			instance.hide();
-// 		});
-// 	},
-// 	onShow(instance){
-// 		setTimeout(() => {
-// 			Sharer.init();
-
-// 			$('.js-copy-to-clipboard').on('click', function(e)
-// 			{
-// 				var that = $(this);
-
-// 				var valueToCopy = that.attr('data-to-copy');
-
-// 				if(valueToCopy)
-// 				{
-// 					copyTextToClipboard(valueToCopy);
-// 				}
-// 			});
-// 		}, 500)
-// 	},
-// 	// onTrigger(instance){
-
-// 	// 	window.Sharer.init();
-// 	// }
-// };
-
-// tippy('[data-tippy-content]', tippySettings);
-
-// $(function()
-// {
-// 	AOS.init(
-// 	{
-// 		duration: 1500,
-// 		once: true,
-// 	});
-// });
 
 ////////////////////////////////////////
 // Lazyloading
@@ -1520,6 +1456,7 @@ function processLazyVideoScroll()
 	});
 }
 
+
 $(function()
 {
 	dataLazyVideoArray = $('[' + lazyVideoAttr + ']');
@@ -1530,6 +1467,7 @@ $(function()
 		{
 			windowHeight = $(window).height();
 			
+			// First call
 			offsetTop = $(window).scrollTop();
 			processLazyVideoScroll();
 
@@ -1544,7 +1482,7 @@ $(function()
 				{
 					if(now - lastScrollFireTime > (3 * minScrollTime))
 					{
-						processLazyVideoScroll();
+						processLazyVideoScroll(); // od razu przy pierwszym scrollu
 						lastScrollFireTime = now;
 					}
 
@@ -1695,221 +1633,849 @@ $(function()
 });
 
 ////////////////////////////////////////
-
-$(document).on('click', '.js-expander-button', function(e)
-{
-	var $that = $(this);
-	var thatIndex = $that.index();
-	var $container = $that.closest('.js-expanders-container');
-
-	var $expanders = $container.find('.js-expander-item');
-
-	$that.toggleClass('active');
-
-	$expanders.eq(thatIndex).slideToggle();
-});
+var blockOnChangeIntroSlider = false;
 
 $(document).on('click', '.js-tabs-button', function(e)
 {
-	var $that = $(this);
-	var thatIndex = $that.index();
-	var $container = $that.closest('.js-tabs-container');
+	blockOnChangeIntroSlider = true;
 
+	var $that = $(this);
+	var $container = $that.closest('.js-tabs-container');
+	
 	var $buttons = $container.find('.js-tabs-button');
+	var thatIndex = $buttons.index($that);
 	var $tabs = $container.find('.js-tabs-item');
+	var $previousActive = $buttons.filter('.active');
+	var previousActiveIndex = $previousActive.index('.js-tabs-button');
 
 	$buttons.removeClass('active');
 	$that.addClass('active');
 
 	$tabs.hide();
+	var $allTabsVideos = $tabs.find('[data-lazy-video-ready]');
+	$allTabsVideos.attr('data-lazy-video-ready', 'false');
+
+	var $newCurrentTab = $tabs.eq(thatIndex);
+
+	if($newCurrentTab.length)
+	{
+		$newCurrentTab.fadeIn();
+	}
+
+	var $introSlider = $container.find('.js-intro-slider');
+
+	if($introSlider.length)
+	{
+		$introSlider.slick('slickGoTo', thatIndex);
+	}
+
+	var $currentTabVideos = $newCurrentTab.find('[data-lazy-video-ready]')
+	$currentTabVideos.attr('data-lazy-video-ready', 'true');
+
+	processLazyVideoScroll();
+
+	blockOnChangeIntroSlider = false;
 });
 
-////////////////////////////////////////////
+$(document).on('click', '.js-active-target-data', function(e)
+{
+	var $that = $(this);
 
-// function bindScrollTranslateY($element, maxTranslateConfig, offsets)
+	var targetSelector = $that.data('active-target-selector');
+	var targetValue = String($that.data('active-target-value'));
+
+	var $targets = $(targetSelector);
+
+	if(! $targets.length)
+	{
+		return;
+	}
+
+	var targetAttribute = targetSelector.match(/\[data-([^\]=]+)(?:=[^\]]+)?\]/);
+
+	if(!targetAttribute)
+	{
+		return;
+	}
+
+	targetAttribute = 'data-' + targetAttribute[1];
+
+	$targets.each(function()
+	{
+		var $target = $(this);
+		var value = String($target.attr(targetAttribute));
+
+		$target.toggleClass('active', value === targetValue);
+	});
+});
+
+function extractRGB(color)
+{
+	var match = color.match(/rgba?\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/i);
+
+	if (!match)
+	{
+		return null;
+	}
+
+	return {
+		r: match[1],
+		g: match[2],
+		b: match[3]
+	};
+}
+
+function replaceRGB(gradientStop, rgb)
+{
+	return gradientStop.replace(
+		/rgba?\s*\(\s*\d+\s*,\s*\d+\s*,\s*\d+/i,
+		'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b
+	);
+}
+
+$(document).on('click', '.js-input-clear', function(e)
+{
+	var $that = $(this);
+	var $container = $that.closest('.js-input-container');
+	var $input = $container.find('input');
+
+	$input.val('');
+
+	$that.fadeOut();
+});
+
+$(document).on('input', '.js-input-container input', function(e)
+{
+	var $that = $(this);
+	var $container = $that.closest('.js-input-container');
+
+	var value = $that.val();
+
+	if($container.length)
+	{
+		var $clearButton = $container.find('.js-input-clear');
+		var $inputError = $container.find('.js-input-error');
+		
+		$that.removeClass('error');
+		$inputError.hide();
+
+		if($clearButton.length)
+		{
+			if(value.length)
+			{
+				$clearButton.fadeIn();
+			}
+			else
+			{
+				$clearButton.fadeOut();
+			}
+		}
+	}
+});
+
+$(document).on('input', '.js-input-atleas-one input', function(e)
+{
+	var $that = $(this);
+	var $inputsContainer = $that.closest('.js-input-atleas-one');
+
+	if($inputsContainer.length)
+	{
+		var $inputs = $inputsContainer.find('input');
+		var $inputsError = $inputsContainer.find('.js-input-error');
+
+		$inputs.removeClass('error');
+		$inputsError.hide();
+	}
+});
+
+$(document).on('input', '.js-post-code', function()
+{
+	var value = $(this).val();
+
+	// usuń wszystko oprócz cyfr i myślnika
+	value = value.replace(/[^0-9-]/g, '');
+
+	// jeżeli ktoś wpisał dokładnie "12-" — zostaw
+	if(/^\d{2}-$/.test(value))
+	{
+		$(this).val(value);
+		return;
+	}
+
+	// usuń wszystkie myślniki (poza przypadkiem wyżej)
+	value = value.replace(/-/g, '');
+
+	// max 5 cyfr
+	value = value.substring(0, 5);
+
+	// auto myślnik po 2 cyfrach
+	if(value.length > 2)
+	{
+		value = value.substring(0, 2) + '-' + value.substring(2);
+	}
+
+	$(this).val(value);
+});
+
+
+$(document).on('click', '.js-stop-propagation', function(e)
+{
+	e.stopPropagation();
+})
+
+/////////////////////////////////////////
+// AJAX submit button
+function blockAjaxSubmitButton($button)
+{
+	var button = $button.get(0);
+
+	if(! button || $button.data('ajax-submit-pending') === true) return false;
+
+	$button.find('.ajax-submit-loader').remove();
+
+	$button
+		.data('ajax-submit-pending', true)
+		.data('ajax-submit-was-disabled', button.disabled)
+		.data('ajax-submit-opacity', button.style.opacity)
+		.data('ajax-submit-pointer-events', button.style.pointerEvents)
+		.prop('disabled', true)
+		.attr('aria-busy', 'true')
+		.css({
+			opacity: 0.7,
+			pointerEvents: 'none',
+		})
+		.append('<span class="ajax-submit-loader" aria-hidden="true"></span>');
+
+	return true;
+}
+
+function unblockAjaxSubmitButton($button)
+{
+	var button = $button.get(0);
+
+	if(! button) return;
+
+	button.style.opacity = $button.data('ajax-submit-opacity') || '';
+	button.style.pointerEvents = $button.data('ajax-submit-pointer-events') || '';
+
+	$button
+		.prop('disabled', $button.data('ajax-submit-was-disabled') === true)
+		.removeAttr('aria-busy')
+		.find('.ajax-submit-loader').remove().end()
+		.removeData('ajax-submit-pending')
+		.removeData('ajax-submit-was-disabled')
+		.removeData('ajax-submit-opacity')
+		.removeData('ajax-submit-pointer-events');
+}
+
+
+/////////////////////////////////////////
+// Example AJAX form
+$(document).on('click', '.js-submit-form', function(e)
+{
+	var $that = $(this);
+	var $contact = $that.closest('form');
+
+	if(! $contact.length) return;
+
+	e.preventDefault();
+
+	if($that.prop('disabled')) return;
+
+	var params = {};
+	var $inputs = $contact.find('input');
+
+	var cslInputNames = [];
+	var checkboxInputsNames = [];
+
+	$inputs.each(function(index, input)
+	{
+		var $input = $(input);
+		var $inputContainer = $input.closest('.js-input-container');
+		var $inputError = $inputContainer.find('.js-input-error');
+		var name = $input.attr('name');
+		var value = $input.val();
+
+		if(cslInputNames.includes(name))
+		{
+			value = $input.attr('data-value');
+		}
+
+		$input.removeClass('error');
+		$inputError.hide();
+
+		if(checkboxInputsNames.includes(name))
+		{
+			value = $input.is(':checked');
+		}
+
+		params[name] = value;
+	});
+
+	params['current-id'] = currentId;
+
+	Object.assign(params, getUtmParams());
+
+	if(! blockAjaxSubmitButton($that)) return;
+
+	$.ajax(
+	{
+		type: "POST",
+		url: ajaxUrl,
+		data: {
+			action: 'submit-form',
+			params: JSON.stringify(params),
+		},
+		success: function(response)
+		{
+			if(response?.success)
+			{
+				$inputs.each(function(index, input)
+				{
+					var $input = $(input);
+					var name = $input.attr('name');
+
+					if(checkboxInputsNames.includes(name))
+					{
+						$input.prop('checked', false).trigger('change');
+					}
+					else if(cslInputNames.includes(name))
+					{
+						var defaultValue = $input.attr('data-default-value');
+						$input.val(defaultValue);
+						$input.attr('data-value', defaultValue);
+					}
+					else if($input.attr('type')
+					&& $input.attr('type') != 'hidden')
+					{
+						$input.val('');
+					}
+				});
+			}
+			else
+			{
+				if(response?.missingFields)
+				{
+					for(const inputName of response.missingFields)
+					{
+						var $input = $contact.find('input[name="' + inputName + '"]');
+						var $inputContainer = $input.closest('.js-input-container');
+						var $inputError = $inputContainer.find('.js-input-error');
+
+						$input.addClass('error');
+
+						if($input.attr('type') == 'checkbox')
+						{
+							if(checkboxInputsNames.includes(inputName))
+							{
+								$inputError.html('Należy wybrać');
+								$inputError.show();
+							}
+							else
+							{
+								$inputError.html('To pole jest wymagane');
+							}
+						}
+						else
+						{
+							if(inputName == 'name')
+							{
+								$inputError.html('Imię jest wymagane');
+							}
+							else if(inputName == 'surname')
+							{
+								$inputError.html('Nazwisko jest wymagane');
+							}
+							else if(inputName == 'phone')
+							{
+								$inputError.html('Numer telefonu jest wymagany');
+							}
+							else if(inputName == 'email')
+							{
+								$inputError.html('Adres e-mail jest wymagany');
+							}
+							else
+							{
+								$inputError.html('To pole jest wymagane');
+							}
+
+							$inputError.show();
+						}
+					}
+				}
+
+				if(response?.wrongValueFields)
+				{
+					for(const inputName of response.wrongValueFields)
+					{
+						var $input = $contact.find('input[name="' + inputName + '"]');
+						var $inputContainer = $input.closest('.js-input-container');
+						var $inputError = $inputContainer.find('.js-input-error');
+
+						$input.addClass('error');
+
+						if($input.attr('type') == 'checkbox')
+						{
+							if(checkboxInputsNames.includes(inputName))
+							{
+								$inputError.html('Należy wybrać');
+								$inputError.show();
+							}
+							else
+							{
+								$inputError.html('To pole jest wymagane');
+							}
+						}
+						else
+						{
+							if(inputName == 'name')
+							{
+								$inputError.html('Wpisz poprawne Imię');
+							}
+							else if(inputName == 'surname')
+							{
+								$inputError.html('Wpisz poprawne Nazwisko');
+							}
+							else if(inputName == 'phone')
+							{
+								$inputError.html('Wpisz poprawny numer telefonu');
+							}
+							else if(inputName == 'email')
+							{
+								$inputError.html('Wpisz poprawny adres e-mail');
+							}
+							else
+							{
+								$inputError.html('Wpisz poprawne dane');
+							}
+
+							$inputError.show();
+						}
+					}
+				}
+
+				var $firstError = $inputs.filter('.error').first();
+
+				if($firstError.length)
+				{
+					scrollToEl($firstError);
+				}
+			}
+
+			var message = response?.message;
+			var messageText = [message?.title, message?.text].filter(Boolean).join('\n');
+
+			if(messageText)
+			{
+				window.alert(messageText);
+			}
+		},
+		error: function(err)
+		{
+			console.log(err);
+			alert('Błąd serwera!');
+		},
+		complete: function()
+		{
+			unblockAjaxSubmitButton($that);
+		}
+	});
+});
+
+/////////////////////////////////////
+
+function bindScrollTranslateY($element, maxTranslateConfig, offsets)
+{
+	if(! $element.length) return false;
+
+	const startScroll = $element.offset().top;
+
+	$(window).on('scroll resize', function()
+	{
+		const width = window.innerWidth;
+
+		// --- resolve maxTranslateRem ---
+		let maxTranslateRem = null;
+
+		if (maxTranslateConfig === false)
+		{
+			$element.css('transform', '');
+			return;
+		}
+
+		if(maxTranslateConfig === null)
+		{
+			let lg = $element.attr('data-bind-to-rem-lg');
+			let md = $element.attr('data-bind-to-rem-md');
+			let sm = $element.attr('data-bind-to-rem-sm');
+
+			lg = lg === undefined ? null : (lg === 'false' ? false : parseFloat(lg));
+			md = md === undefined ? null : (md === 'false' ? false : parseFloat(md));
+			sm = sm === undefined ? null : (sm === 'false' ? false : parseFloat(sm));
+
+			// --- inheritance ---
+			if(lg !== null)
+			{
+				if(md === null) md = lg;
+				if(sm === null) sm = md;
+			}
+
+			// false blocks inheritance
+			if(md === false) sm = false;
+
+			maxTranslateConfig =
+			{
+				lg: lg,
+				md: md,
+				sm: sm
+			};
+		}
+
+		if (typeof maxTranslateConfig === 'object')
+		{
+			if (width > 992)
+			{
+				maxTranslateRem = maxTranslateConfig.lg ?? maxTranslateConfig.md ?? maxTranslateConfig.sm ?? false;
+			}
+			else if (width > 576)
+			{
+				maxTranslateRem = maxTranslateConfig.md ?? maxTranslateConfig.lg ?? maxTranslateConfig.sm ?? false;
+			}
+			else
+			{
+				maxTranslateRem = maxTranslateConfig.sm ?? maxTranslateConfig.md ?? maxTranslateConfig.lg ?? false;
+			}
+		}
+		else
+		{
+			maxTranslateRem = maxTranslateConfig;
+		}
+
+		if (maxTranslateRem === false)
+		{
+			$element.css('transform', '');
+			return;
+		}
+
+		const maxTranslatePx = convertRemToPixels(maxTranslateRem);
+
+		// --- resolve offsetRem ---
+		let offsetRem = 0;
+
+		if (typeof offsets === 'object')
+		{
+			if (width > 992)
+			{
+				offsetRem = offsets.lg ?? offsets.md ?? offsets.sm ?? 0;
+			}
+			else if (width > 576)
+			{
+				offsetRem = offsets.md ?? offsets.lg ?? offsets.sm ?? 0;
+			}
+			else
+			{
+				offsetRem = offsets.sm ?? offsets.md ?? offsets.lg ?? 0;
+			}
+		}
+		else
+		{
+			offsetRem = offsets || 0;
+		}
+
+		// --- scroll logic ---
+		const scrollTop = $(window).scrollTop() + convertRemToPixels(offsetRem);
+		const deltaPx = Math.max(scrollTop - startScroll, 0);
+		const clampedPx = Math.min(deltaPx, maxTranslatePx);
+		const translateRem = pxToRem(clampedPx);
+
+		$element.css(
+			'transform',
+			`translateY(${translateRem}rem)`
+		);
+	});
+}
+
+function bindScrollFixedTranslateY($element, maxTranslateConfig, offsets)
+{
+	if(!$element.length) return false;
+
+	const startScroll = $element.offset().top - $(window).scrollTop();
+
+	function updatePosition()
+	{
+		const width = window.innerWidth;
+
+		// --- resolve maxTranslateRem ---
+		let maxTranslateRem = null;
+
+		if(maxTranslateConfig === false)
+		{
+			$element.css({
+				position: '',
+				top: '',
+				transform: ''
+			});
+			return;
+		}
+
+		if(maxTranslateConfig === null)
+		{
+			let lg = $element.attr('data-bind-to-rem-lg');
+			let md = $element.attr('data-bind-to-rem-md');
+			let sm = $element.attr('data-bind-to-rem-sm');
+
+			lg = lg === undefined ? null : (lg === 'false' ? false : parseFloat(lg));
+			md = md === undefined ? null : (md === 'false' ? false : parseFloat(md));
+			sm = sm === undefined ? null : (sm === 'false' ? false : parseFloat(sm));
+
+			if(lg !== null)
+			{
+				if(md === null) md = lg;
+				if(sm === null) sm = md;
+			}
+
+			if(md === false) sm = false;
+
+			maxTranslateConfig =
+			{
+				lg: lg,
+				md: md,
+				sm: sm
+			};
+		}
+
+		if(typeof maxTranslateConfig === 'object')
+		{
+			if(width > 992)
+				maxTranslateRem = maxTranslateConfig.lg ?? maxTranslateConfig.md ?? maxTranslateConfig.sm ?? false;
+			else if(width > 576)
+				maxTranslateRem = maxTranslateConfig.md ?? maxTranslateConfig.lg ?? maxTranslateConfig.sm ?? false;
+			else
+				maxTranslateRem = maxTranslateConfig.sm ?? maxTranslateConfig.md ?? maxTranslateConfig.lg ?? false;
+		}
+		else
+			maxTranslateRem = maxTranslateConfig;
+
+		if(maxTranslateRem === false)
+		{
+			$element.css({
+				position: '',
+				top: '',
+				transform: ''
+			});
+			return;
+		}
+
+		const maxTranslatePx = convertRemToPixels(maxTranslateRem);
+
+		// --- resolve offsetRem ---
+		let offsetRem = 0;
+
+		if(typeof offsets === 'object')
+		{
+			if(width > 992)
+				offsetRem = offsets.lg ?? offsets.md ?? offsets.sm ?? 0;
+			else if(width > 576)
+				offsetRem = offsets.md ?? offsets.lg ?? offsets.sm ?? 0;
+			else
+				offsetRem = offsets.sm ?? offsets.md ?? offsets.lg ?? 0;
+		}
+		else
+			offsetRem = offsets || 0;
+
+		const scrollTop = $(window).scrollTop() + convertRemToPixels(offsetRem);
+		const deltaPx = Math.max(scrollTop - startScroll, 0);
+
+		if(deltaPx <= 0)
+		{
+			$element.css({
+				position: '',
+				top: '',
+				transform: ''
+			});
+		}
+		else if(deltaPx < maxTranslatePx)
+		{
+			$element.css({
+				position: 'fixed',
+				top: `${offsetRem}rem`,
+				transform: ''
+			});
+		}
+		else
+		{
+			const translateRem = maxTranslateRem;
+
+			$element.css({
+				position: 'absolute',
+				top: '0rem',
+				transform: `translateY(${translateRem}rem)`
+			});
+		}
+	}
+
+	$(window).on('scroll resize', updatePosition);
+
+	return updatePosition;
+}
+
+$(window).on('load', function()
+{
+	const updateConfBox = bindScrollFixedTranslateY(
+		$('.conf__box__left'),
+		null,
+		{
+			lg: 70,
+		}
+	);
+
+	if(typeof updateConfBox == 'function')
+	{
+		updateConfBox();
+	}
+});
+
+//////////////////
+
+function isElementInViewport($element)
+{
+	if ($element.length === 0)
+	{
+		return false;
+	}
+
+	let elementTop = $element.offset().top;
+	let elementBottom = elementTop + $element.outerHeight();
+
+	let viewportTop = $(window).scrollTop();
+	let viewportBottom = viewportTop + $(window).height();
+
+	return elementBottom > viewportTop && elementTop < viewportBottom;
+}
+
+$(window).on('scroll', function ()
+{
+	let $trigger = $('.js-scroll-trigger-fadein');
+	let $targetDesktop = $('.js-scroll-trigger-fadein-desktop');
+	let $targetMobile = $('.js-scroll-trigger-fadein-mobile');
+
+	if(isElementInViewport($trigger))
+	{
+		if(windowWidth > 992)
+		{
+			$targetDesktop.fadeOut('slow');
+			$targetMobile.hide();
+		}
+		else
+		{
+			$targetDesktop.hide();
+			$targetMobile.fadeOut('slow');
+		}
+	}
+	else
+	{
+		if(windowWidth > 992)
+		{
+			$targetDesktop.fadeIn('fast');
+			$targetMobile.hide();
+		}
+		else
+		{
+			$targetDesktop.hide();
+			$targetMobile.fadeIn('fast');
+		}
+	}
+});
+
+$(window).on('resize', function ()
+{
+	let $targetDesktop = $('.js-scroll-trigger-fadein-desktop');
+	let $targetMobile = $('.js-scroll-trigger-fadein-mobile');
+
+	if(windowWidth > 992)
+	{
+		$targetDesktop.show();
+		$targetMobile.hide();
+	}
+	else
+	{
+		$targetDesktop.hide();
+		$targetMobile.show();
+	}
+});
+
+function getUtmParams()
+{
+	const urlParams = new URLSearchParams(window.location.search);
+
+	const utm = {};
+
+	const keys = [
+		'utm_source',
+		'utm_medium',
+		'utm_campaign',
+		'utm_term',
+		'utm_content'
+	];
+
+	keys.forEach(function(key)
+	{
+		const value = urlParams.get(key);
+
+		if(value && value !== '')
+		{
+			utm[key] = value;
+		}
+	});
+
+	return utm;
+}
+
+// $(function(e)
 // {
-// 	if(! $element.length) return false;
+// 	var params = {};
 
-// 	const startScroll = $element.offset().top;
+// 	Object.assign(params, getUtmParams());
 
-// 	$(window).on('scroll resize', function()
+// 	$.ajax(
 // 	{
-// 		const width = window.innerWidth;
-
-// 		// --- resolve maxTranslateRem ---
-// 		let maxTranslateRem = null;
-
-// 		if (maxTranslateConfig === false)
+// 		type: "POST",
+// 		url: ajaxUrl,
+// 		data: {
+// 			action: 'saveSessionUtm',
+// 			params: JSON.stringify(params),
+// 		},
+// 		success: function(response)
 // 		{
-// 			$element.css('transform', '');
-// 			return;
-// 		}
+// 			// var message = response?.message ?? {};
 
-// 		if(maxTranslateConfig === null)
-// 		{
-// 			let lg = $element.attr('data-bind-to-rem-lg');
-// 			let md = $element.attr('data-bind-to-rem-md');
-// 			let sm = $element.attr('data-bind-to-rem-sm');
-
-// 			lg = lg === undefined ? null : (lg === 'false' ? false : parseFloat(lg));
-// 			md = md === undefined ? null : (md === 'false' ? false : parseFloat(md));
-// 			sm = sm === undefined ? null : (sm === 'false' ? false : parseFloat(sm));
-
-// 			// --- inheritance ---
-// 			if(lg !== null)
+// 			if(response?.success)
 // 			{
-// 				if(md === null) md = lg;
-// 				if(sm === null) sm = md;
-// 			}
-
-// 			// false blocks inheritance
-// 			if(md === false) sm = false;
-
-// 			maxTranslateConfig =
-// 			{
-// 				lg: lg,
-// 				md: md,
-// 				sm: sm
-// 			};
-// 		}
-
-// 		if (typeof maxTranslateConfig === 'object')
-// 		{
-// 			if (width > 992)
-// 			{
-// 				maxTranslateRem = maxTranslateConfig.lg ?? maxTranslateConfig.md ?? maxTranslateConfig.sm ?? false;
-// 			}
-// 			else if (width > 576)
-// 			{
-// 				maxTranslateRem = maxTranslateConfig.md ?? maxTranslateConfig.lg ?? maxTranslateConfig.sm ?? false;
+// 				// if(response?.message)
+// 				// {
+// 				// 	showPopup({
+// 				// 		'title': response.message?.title ?? '',
+// 				// 		'text': response.message?.text ?? '',
+// 				// 	});
+// 				// }
 // 			}
 // 			else
 // 			{
-// 				maxTranslateRem = maxTranslateConfig.sm ?? maxTranslateConfig.md ?? maxTranslateConfig.lg ?? false;
-// 			}
-// 		}
-// 		else
-// 		{
-// 			maxTranslateRem = maxTranslateConfig;
-// 		}
-
-// 		if (maxTranslateRem === false)
-// 		{
-// 			$element.css('transform', '');
-// 			return;
-// 		}
-
-// 		const maxTranslatePx = convertRemToPixels(maxTranslateRem);
-
-// 		// --- resolve offsetRem ---
-// 		let offsetRem = 0;
-
-// 		if (typeof offsets === 'object')
-// 		{
-// 			if (width > 992)
-// 			{
-// 				offsetRem = offsets.lg ?? offsets.md ?? offsets.sm ?? 0;
-// 			}
-// 			else if (width > 576)
-// 			{
-// 				offsetRem = offsets.md ?? offsets.lg ?? offsets.sm ?? 0;
-// 			}
-// 			else
-// 			{
-// 				offsetRem = offsets.sm ?? offsets.md ?? offsets.lg ?? 0;
-// 			}
-// 		}
-// 		else
-// 		{
-// 			offsetRem = offsets || 0;
-// 		}
-
-// 		// --- scroll logic ---
-// 		const scrollTop = $(window).scrollTop() + convertRemToPixels(offsetRem);
-// 		const deltaPx = Math.max(scrollTop - startScroll, 0);
-// 		const clampedPx = Math.min(deltaPx, maxTranslatePx);
-// 		const translateRem = pxToRem(clampedPx);
-
-// 		$element.css(
-// 			'transform',
-// 			`translateY(${translateRem}rem)`
-// 		);
-// 	});
-// }
-
-// $(function()
-// {
-// 	bindScrollTranslateY(
-// 		$('.js-bindscroll-y'),
-// 		null,
-// 		{
-// 			lg: 70,
-// 		}
-// 	);
-// });
-
-/////////////////////////////////////////////
-
-// var tippyDesktopOffset = [0, 11]; // x y
-// var tippyMobileOffset = [0, 11]; // x y
-
-// function registerTooltips(container = document) {
-// 	const elements = container.querySelectorAll('.js-tooltip');
-// 	if (!elements.length) return;
-
-// 	tippy(elements, {
-// 		allowHTML: true,
-// 		interactive: true,
-// 		content(ref) {
-// 			var contentText = ref.dataset.tooltipContent || '';
-// 			return `
-// 				<div class="tooltip">
-// 					<div class="tooltip__inner js-scrollbar">
-// 						${contentText}
-// 					</div>
-// 				</div>
-// 			`;
-// 		},
-// 		delay: 500,
-// 		animation: 'shift-away-subtle',
-// 		theme: 'light',
-// 		duration: [0, 500],
-// 		placement(ref) {
-// 			return ref.dataset.tooltipPlacement || ((window.innerWidth >= 992) ? 'right' : 'top');
-// 		},
-// 		offset(ref) {
-// 			return (window.innerWidth >= 992) ? tippyDesktopOffset : tippyMobileOffset;
-// 		},
-// 		onShow(instance) {
-// 			const dataset = instance.reference.dataset;
-
-// 			const placement = dataset.tooltipPlacement 
-// 				? dataset.tooltipPlacement 
-// 				: (window.innerWidth >= 992 ? 'right' : 'top');
-
-// 			instance.setProps({
-// 				delay: dataset.tooltipDelay ? parseInt(dataset.tooltipDelay) : 500,
-// 				animation: dataset.tooltipAnimation || 'shift-away-subtle',
-// 				theme: dataset.tooltipTheme || 'light',
-// 				duration: dataset.tooltipDuration
-// 					? dataset.tooltipDuration.split(',').map(Number)
-// 					: [0, 500],
-// 				placement: placement
-// 			});
-// 		},
-// 		onMount(instance) {
-// 			// scrollbar logic
-// 			var scrollContent = instance.popper.querySelectorAll('.js-scrollbar');
-// 			scrollContent.forEach(function(element) {
-// 				if($(element).height() >= convertRemToPixels(265)) {
-// 					element.classList.add('with-scrollbar');
+// 				if(response?.message)
+// 				{
+// 					showPopup({
+// 						'title': response.message?.title ?? '',
+// 						'text': response.message?.text ?? '',
+// 					});
 // 				}
-// 			});
-// 			makeScrollbars(scrollContent);
+// 			}
+// 		},
+// 		error: function(err)
+// 		{
+// 			console.log(err);
+// 			alert('Błąd serwera!');
 // 		}
 // 	});
-// }
-
-// $(function() {
-// 	registerTooltips(document);
 // });
+
+const paramsGet = new URLSearchParams(window.location.search);

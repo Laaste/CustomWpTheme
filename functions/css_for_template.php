@@ -27,6 +27,7 @@ function getTemplateCssPath($template, $url = true, $min = true)
 
 function getCssPathForTemplate()
 {
+	// if(is_singular('car-offer')) { return asset('css/theme/templates/single-offer.css', true); }
 	// Get the current template
 	$currentTemplate = get_page_template_slug();
 
@@ -133,6 +134,7 @@ function linkCssForTemplate()
 // Automatic handle before custom.scss
 function theme_enqueue_template_styles()
 {
+	// if(is_singular('car-offer')) { wp_enqueue_style('offer-components', asset('css/composable.css', true)); }
 	$cssPathForTemplate = getCssPathForTemplate();
 	$currentTemplate = get_page_template_slug();
 

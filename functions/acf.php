@@ -363,6 +363,12 @@ function acfGetCurrentLangOption($fieldName)
 #endRegion htaccess
 ///////////////////////////////////////////////////////
 
+// if(isset($_GET['composable']))
+// {
+// 	acfListComposableLayoutsUsage();
+// 	die();
+// }
+
 function acfListComposableLayoutsUsage($field_name = 'composable')
 {
 	global $wpdb;
@@ -711,6 +717,13 @@ add_action('acf/init', function()
 							'param' => 'post_type',
 							'operator' => '==',
 							'value' => 'page',
+						],
+					],
+					[
+						[
+							'param' => 'post_type',
+							'operator' => '==',
+							'value' => 'post',
 						],
 					],
 				],

@@ -2,8 +2,7 @@
 
 <?php get_header(); ?>
 
-<link rel="stylesheet" href="<?= get_template_directory_uri(); ?>/assets/css/composable.css">
-
+<link rel="stylesheet" href="<?= get_template_directory_uri(); ?>/assets/css/composable.css?v=1.1">
 <?php
 $currentId = currentID();
 pageRedirect($currentId);

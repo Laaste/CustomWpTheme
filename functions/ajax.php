@@ -1,4 +1,11 @@
 <?php
+function setTimezoneAjax()
+{
+	date_default_timezone_set('Europe/Warsaw');
+}
+
+setTimezoneAjax();
+
 function echoAjaxUrlInFooter()
 {
 	$ajaxUrl = admin_url('admin-ajax.php');
@@ -133,3 +140,86 @@ add_action('wp_head', 'echoAjaxUrlInFooter');
 // }
 // add_action('wp_ajax_searchPostsAjax', 'searchPostsAjax');
 // add_action('wp_ajax_nopriv_searchPostsAjax', 'searchPostsAjax');
+
+function clearSessionUtm()
+{
+	unset($_SESSION['utm']);
+	unset($_SESSION['utm_save_time']);
+	unset($_SESSION['utm_end_time']);
+}
+
+function saveSessionUtm()
+{
+	if(session_status() === PHP_SESSION_NONE)
+	{
+		session_start();
+	}
+
+	$raw = $_POST['params'] ?? '{}';
+	$params = json_decode(stripslashes($raw), true);
+
+	if(! is_array($params))
+	{
+		wp_send_json([
+			'success' => false,
+			'message' => [
+				'title' => 'Błąd',
+				'text'  => 'Nieprawidłowe dane UTM'
+			]
+		]);
+	}
+
+	$now = time();
+	$ttl = 1 * 60 * 60; // 1h
+	$endTime = $now + $ttl;
+
+	// Clear
+	if(isset($_SESSION['utm_end_time'])
+	&& $_SESSION['utm_end_time'] < $now)
+	{
+		clearSessionUtm();
+	}
+
+	// Add new
+	if(! empty($params))
+	{
+		$_SESSION['utm'] = $params;
+		$_SESSION['utm_save_time'] = $now;
+		$_SESSION['utm_end_time'] = $endTime;
+	}
+
+	wp_send_json([
+		'success' => true
+	]);
+}
+add_action('wp_ajax_saveSessionUtm', 'saveSessionUtm');
+add_action('wp_ajax_nopriv_saveSessionUtm', 'saveSessionUtm');
+
+function appendUtmParams(array &$contactParams, $source)
+{
+	if(!isset($_POST['params']))
+	{
+		return;
+	}
+
+	if(!is_array($source))
+	{
+		return;
+	}
+
+	$utmKeys = [
+		'utm_source',
+		'utm_medium',
+		'utm_campaign',
+		'utm_term',
+		'utm_content'
+	];
+
+	foreach($utmKeys as $key)
+	{
+		if(isset($source[$key]) && $source[$key] !== '')
+		{
+			$contactParams[$key] = (string)$source[$key];
+		}
+	}
+}

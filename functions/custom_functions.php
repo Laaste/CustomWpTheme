@@ -1,8 +1,16 @@
 <?php
+function setTimezone()
+{
+	date_default_timezone_set('Europe/Warsaw');
+}
+
+setTimezone();
+
 register_nav_menus(
 [
 	'header_menu' => 'Menu w headerze',
 	'footer_menu' => 'Menu w stopce',
+	'footer_files' => 'Pliki w stopce',
 ]);
 
 //////////////////////////////////////////////
@@ -217,7 +225,7 @@ function strongerSearchPhrase($contentOrginal, $searchPhrase, $forceFullText = f
 /*
  * for search "kon"
  * 
- * konfre -> "konfre"
+ * konfre -> "konfe"
  * konferencje -> "konferencje"
  * kontrahentów -> "kontrahentów"
  * kon -> "kon"
@@ -378,143 +386,17 @@ function strMatchFromStartPartial($searchPhrase, $content)
 //////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////
 
-function customFixLinksFromOldWebsite()
-{
-	global $wpdb;
-
-	// $oldValue = 'test.pl/news/';
-	// $newValue = 'testnew.pl/aktualnosci/';
-
-	/**
-	 * Didnt work for konferencja for some reasons
-	 */
-	// $oldValue = 'test.pl/konferencja/';
-	// $newValue = 'testnew.pl/konferencja/';
-
-	//////////////////////////////////////
-	// Exact for post meta
-	// $postMetas = $wpdb->get_results("SELECT meta_id, post_id, meta_key, meta_value
-	// FROM {$wpdb->postmeta}
-	// WHERE meta_value LIKE \"%{$oldValue}%\"
-	// ");
-
-	// dd($postMetas); // keep checking after update cause update_post_meta sometimes doesnt work
-	
-	// foreach($postMetas as $postMeta)
-	// {
-	// 	$procceed = str_ireplace($oldValue, $newValue, $postMeta->meta_value);
-		
-	// 	update_post_meta($postMeta->post_id, $postMeta->meta_key, $procceed);
-
-	// 	dd(get_post_meta($postMeta->post_id, $postMeta->meta_key));
-	// }
-
-	//////////////////////////////////////
-	// Generic for post meta
-	// $oldValue = 'test.pl';
-	// $newValue = 'testnew.pl';
-
-	// $postMetas = $wpdb->get_results("SELECT meta_id, post_id, meta_key, meta_value
-	// FROM {$wpdb->postmeta}
-	// WHERE meta_value LIKE \"%{$oldValue}%\"
-	// ");
-
-	// foreach($postMetas as $postMeta)
-	// {
-	// 	$procceed = preg_replace_callback('/(.{0,4})(test\.pl)/i', function($matches) use($postMeta, $newValue)
-	// 	{
-	// 		// 0 full match
-	// 		$prefix = $matches[1]; // http / https / www / or subdomain
-	// 		$match = $matches[2];
-
-	// 		// Skip mails
-	// 		if(str_ends_with($prefix, '@'))
-	// 		{
-	// 			return $prefix . $match;
-	// 		}
-
-	// 		// Skip subdomains
-	// 		if($prefix != 'www.'
-	// 		&& $prefix != 'p://'
-	// 		&& $prefix != 's://'
-	// 		&& $prefix != null
-	// 		&& $prefix != '')
-	// 		{
-	// 			return $prefix . $match;
-	// 		}
-
-	// 		$replaced = $prefix . $newValue;
-
-	// 		// dump($postMeta->meta_value); // check manually after replace cause it skips 10 rows for some reasons
-
-	// 		// dump(str_replace($prefix . $match, $replaced, $postMeta->meta_value)); // corrected version
-	// 		// echo "<br><br>";
-
-	// 		return $replaced;
-	// 	}, $postMeta->meta_value);
-
-	// 	// update_post_meta($postMeta->post_id, $postMeta->meta_key, $procceed);
-	// }
-	
-	//////////////////////////////////////
-	// Generic for post content
-	$oldValue = 'test.pl';
-	$newValue = 'testnew.pl';
-
-	$postsMatched = $wpdb->get_results("SELECT ID, post_content
-	FROM {$wpdb->posts}
-	WHERE post_content LIKE \"%{$oldValue}%\"
-	");
-
-	foreach($postsMatched as $postObj)
-	{
-		$procceed = preg_replace_callback('/(.{0,4})(test\.pl)/i', function($matches) use($postObj, $newValue)
-		{
-			// 0 full match
-			$prefix = $matches[1]; // http / https / www / or subdomain
-			$match = $matches[2];
-
-			// Skip mails
-			if(str_ends_with($prefix, '@')) // ends with not contains cause it may be "@m.pl"
-			{
-				return $prefix . $match;
-			}
-
-			if($prefix == 'www.'
-			|| $prefix == 'p://' //http
-			|| $prefix == 's://' //https
-			|| empty($prefix) // null or empty string
-			|| preg_match('/\s$/', substr($prefix, -1))) // last char in prefix is whitepasce
-			{
-				return $prefix . $newValue;
-			}
-			else // Skip subdomains
-			{
-				return $prefix . $match;
-			}
-		}, $postObj->post_content);
-
-		wp_update_post(
-		[
-			'ID' => $postObj->ID,
-			'post_content' => $procceed,
-		]);
-	}
-
-	die('koniec');
-}
-
 function pageRedirect($currentId)
 {
 	$activeRedirect = get_field('page_redirect_active', $currentId);
 
 	if($activeRedirect)
 	{
-		$redirectObj = get_field('page_redirect', $currentId);
+		$redirectObjID = get_field('page_redirect', $currentId);
 
-		if($redirectObj)
+		if($redirectObjID)
 		{
-			$redirectLink = get_permalink($redirectObj->ID);
+			$redirectLink = get_permalink($redirectObjID);
 
 			header('Location: ' . $redirectLink, true, 302);
 
@@ -557,5 +439,96 @@ function pageRedirect($currentId)
 
 // 	return $caps;
 // }
+/**
+ * Tworzy nowy post z podanej rewizji
+ *
+ * @param int $revisionId ID rewizji do sklonowania
+ * @param string $postType Typ nowego posta (domyślnie 'post')
+ * @param string $post_status Status nowego posta (domyślnie 'publish')
+ * @return int|WP_Error ID nowego posta lub WP_Error
+ */
+function cloneRevisionAsNewPost($revisionId, $postType = 'post', $post_status = 'private')
+{
+	$revision = get_post($revisionId);
 
-// add_filter( 'webpc_use_htaccess_redirect', '__return_true' );
+	if (!$revision || $revision->post_type !== 'revision') {
+		return new WP_Error('invalid_revision', 'Podane ID nie jest rewizją.');
+	}
+
+	$new_post_id = wp_insert_post([
+		'post_author' => $revision->post_author,
+		'post_date' => $revision->post_date,
+		'post_content' => $revision->post_content,
+		'post_title' => '[Revision id ' . $revisionId . ']' .$revision->post_title,
+		'post_status' => $post_status,
+		'post_type' => $postType,
+	]);
+
+	if (is_wp_error($new_post_id)) {
+		return $new_post_id;
+	}
+
+	if (function_exists('get_fields')
+	&& function_exists('update_field')) {
+		$acf_fields = get_fields($revisionId);
+		if ($acf_fields) {
+			foreach ($acf_fields as $key => $value) {
+				update_field($key, $value, $new_post_id);
+			}
+		}
+	}
+
+	$meta = get_post_meta($revisionId);
+	foreach ($meta as $key => $values) {
+		foreach ($values as $value) {
+			update_post_meta($new_post_id, $key, maybe_unserialize($value));
+		}
+	}
+
+	return $new_post_id;
+}
+
+// if(isset($_GET['clone']))
+// {
+// 	cloneRevisionAsNewPost(613, 'model');
+// }
+
+function getCustomLink($postId)
+{
+	$link = get_field('special_permalink', $postId);
+
+	if(! $link
+	|| empty($link))
+	{
+		$linkObj = get_field('special_permalink_obj', $postId);
+
+		if($linkObj)
+		{
+			$link = get_permalink($linkObj->ID);
+		}
+	}
+
+	if(! $link
+	|| empty($link))
+	{
+		$link = get_permalink($postId);
+	}
+
+	return $link ?: '#';
+}
+
+function add_meta_keywords_from_yoast()
+{
+	if (is_single() || is_page())
+	{
+		global $post;
+
+		$keyword = get_post_meta($post->ID, '_yoast_wpseo_focuskw', true);
+
+		if (!empty($keyword))
+		{
+			echo '<meta name="keywords" content="' . esc_attr($keyword) . '">';
+		}
+	}
+}
+add_action('wp_head', 'add_meta_keywords_from_yoast');

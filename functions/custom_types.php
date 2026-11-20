@@ -1,31 +1,31 @@
 <?php
 #region Taxonomies
-// function register_event_taxonomies()
+// function register_dealers_taxonomies()
 // {
 // 	$labels = [
-// 		"name" => esc_html__("Event categories", "custom-post-type-ui"),
-// 		"singular_name" => esc_html__("Event category", "custom-post-type-ui"),
+// 		"name" => esc_html__("Usługi sprzedawców", "custom-post-type-ui"),
+// 		"singular_name" => esc_html__("Usługa sprzedawcy", "custom-post-type-ui"),
 // 	];
 
 // 	$args = [
-// 		"label" => esc_html__("Event categories", "custom-post-type-ui"),
+// 		"label" => esc_html__("Usługi sprzedawców", "custom-post-type-ui"),
 // 		"labels" => $labels,
 // 		"public" => true,
 // 		"publicly_queryable" => true,
 // 		"hierarchical" => true,
 // 		"show_ui" => true,
-// 		"show_in_menu" => 'true',
+// 		"show_in_menu" => true,
 // 		"show_in_nav_menus" => true,
 // 		"query_var" => true,
 // 		"rewrite" => [
-// 			'slug' => 'event-categories',
+// 			'slug' => 'uslugi-sprzedawcow',
 // 			'with_front' => true,
 // 			'hierarchical' => true,
 // 		],
 // 		"show_admin_column" => true,
 // 		"show_in_rest" => true,
 // 		"show_tagcloud" => false,
-// 		"rest_base" => "event-category",
+// 		"rest_base" => "uslugi-sprzedawcow",
 // 		"rest_controller_class" => "WP_REST_Terms_Controller",
 // 		"rest_namespace" => "wp/v2",
 // 		"show_in_quick_edit" => false,
@@ -43,10 +43,10 @@
 // 		], 
 // 	];
 
-// 	register_taxonomy("event-category", ["event"], $args);
+// 	register_taxonomy("uslugi-sprzedawcow", ["sprzedawca"], $args);
 // }
 
-// add_action('init', 'register_event_taxonomies', 0);
+// add_action('init', 'register_dealers_taxonomies', 0);
 #endregion Taxonomies
 
 ////////////////////////////////////////////////
@@ -54,46 +54,46 @@
 ////////////////////////////////////////////////
 
 #region PostTypes
-// function register_event_post_type()
+// function register_model_post_type()
 // {
 // 	/**
-// 	 * Post Type: Event.
+// 	 * Post Type: Model.
 // 	 */
 
 // 	$labels = [
-// 		"name" => esc_html__("Events", "custom-post-type-ui"),
-// 		"singular_name" => esc_html__("Event", "custom-post-type-ui"),
-// 		"menu_name" => esc_html__("Events", "custom-post-type-ui"),
-// 		"all_items" => esc_html__("All Events", "custom-post-type-ui"),
-// 		"add_new" => esc_html__("Add Event", "custom-post-type-ui"),
-// 		"add_new_item" => esc_html__("Add new Event", "custom-post-type-ui"),
-// 		"edit_item" => esc_html__("Edit Event", "custom-post-type-ui"),
-// 		"new_item" => esc_html__("New Events", "custom-post-type-ui"),
-// 		"view_item" => esc_html__("See Event", "custom-post-type-ui"),
-// 		"view_items" => esc_html__("See events", "custom-post-type-ui"),
-// 		"search_items" => esc_html__("Search Eventu", "custom-post-type-ui"),
-// 		"not_found" => esc_html__("Event not found", "custom-post-type-ui"),
-// 		"not_found_in_trash" => esc_html__("Event not found in trash", "custom-post-type-ui"),
-// 		"parent" => esc_html__("Event Parent", "custom-post-type-ui"),
-// 		"archives" => esc_html__("Event Archive", "custom-post-type-ui"),
-// 		"insert_into_item" => esc_html__("Insert to Event", "custom-post-type-ui"),
-// 		"uploaded_to_this_item" => esc_html__("Send to event", "custom-post-type-ui"),
-// 		"filter_items_list" => esc_html__("Filter events", "custom-post-type-ui"),
-// 		"items_list_navigation" => esc_html__("Navigate Events", "custom-post-type-ui"),
-// 		"items_list" => esc_html__("Events list", "custom-post-type-ui"),
-// 		"attributes" => esc_html__("Event attributes", "custom-post-type-ui"),
-// 		"name_admin_bar" => esc_html__("Events", "custom-post-type-ui"),
-// 		"item_published" => esc_html__("Published Events", "custom-post-type-ui"),
-// 		"item_published_privately" => esc_html__("Event published privately", "custom-post-type-ui"),
-// 		"item_reverted_to_draft" => esc_html__("Event set as draw", "custom-post-type-ui"),
-// 		"item_trashed" => esc_html__("Event moved to trash", "custom-post-type-ui"),
-// 		"item_scheduled" => esc_html__("Event planned", "custom-post-type-ui"),
-// 		"item_updated" => esc_html__("Event updated", "custom-post-type-ui"),
-// 		"parent_item_colon" => esc_html__("Event Parent", "custom-post-type-ui"),
+// 		"name" => esc_html__("Modele", "custom-post-type-ui"),
+// 		"singular_name" => esc_html__("Model", "custom-post-type-ui"),
+// 		"menu_name" => esc_html__("Modele", "custom-post-type-ui"),
+// 		"all_items" => esc_html__("Wszystkie modele", "custom-post-type-ui"),
+// 		"add_new" => esc_html__("Dodaj model", "custom-post-type-ui"),
+// 		"add_new_item" => esc_html__("Dodaj nowy model", "custom-post-type-ui"),
+// 		"edit_item" => esc_html__("Edytuj model", "custom-post-type-ui"),
+// 		"new_item" => esc_html__("Nowy model", "custom-post-type-ui"),
+// 		"view_item" => esc_html__("Zobacz model", "custom-post-type-ui"),
+// 		"view_items" => esc_html__("Zobacz modele", "custom-post-type-ui"),
+// 		"search_items" => esc_html__("Szukaj modelu", "custom-post-type-ui"),
+// 		"not_found" => esc_html__("Modelu nie znaleziony", "custom-post-type-ui"),
+// 		"not_found_in_trash" => esc_html__("Model nie znaleziony w koszu", "custom-post-type-ui"),
+// 		"parent" => esc_html__("Rodzic modelu", "custom-post-type-ui"),
+// 		"archives" => esc_html__("Archiwum modelu", "custom-post-type-ui"),
+// 		"insert_into_item" => esc_html__("Wstaw do Modelu", "custom-post-type-ui"),
+// 		"uploaded_to_this_item" => esc_html__("Wysłano do modelu", "custom-post-type-ui"),
+// 		"filter_items_list" => esc_html__("Filtruj liste modeli", "custom-post-type-ui"),
+// 		"items_list_navigation" => esc_html__("Nawigacja modeli", "custom-post-type-ui"),
+// 		"items_list" => esc_html__("Lista modeli", "custom-post-type-ui"),
+// 		"attributes" => esc_html__("Atrybuty modeli", "custom-post-type-ui"),
+// 		"name_admin_bar" => esc_html__("Modele", "custom-post-type-ui"),
+// 		"item_published" => esc_html__("Modele opublikowane", "custom-post-type-ui"),
+// 		"item_published_privately" => esc_html__("Model opublikowany prywatnie", "custom-post-type-ui"),
+// 		"item_reverted_to_draft" => esc_html__("Model ustawiony jako szkic", "custom-post-type-ui"),
+// 		"item_trashed" => esc_html__("Model przeniesiony do kosza", "custom-post-type-ui"),
+// 		"item_scheduled" => esc_html__("Model zaplanowany", "custom-post-type-ui"),
+// 		"item_updated" => esc_html__("Model zmodyfikowany", "custom-post-type-ui"),
+// 		"parent_item_colon" => esc_html__("Rodzic modelu: ", "custom-post-type-ui"),
 // 	];
 
 // 	$args = [
-// 		"label" => esc_html__("Events", "custom-post-type-ui"),
+// 		"label" => esc_html__("Modele", "custom-post-type-ui"),
 // 		"labels" => $labels,
 // 		"description" => "",
 // 		"public" => true,
@@ -113,25 +113,26 @@
 // 		"hierarchical" => false,
 // 		"can_export" => false,
 // 		"rewrite" => [
-// 			"slug" => "events",
+// 			"slug" => "modele",
 // 			"with_front" => true
 // 		],
 // 		"query_var" => true,
-// 		"menu_icon" => "dashicons-format-aside",
+// 		"menu_icon" => "dashicons-car",
 // 		"supports" => [
 // 			"title",
 // 			"editor",
 // 			"thumbnail",
 // 			"excerpt",
 // 			"revisions",
-// 			"author"
+// 			"author",
+// 			"custom-fields"
 // 		],
-// 		"taxonomies" => ["event-category"],
+// 		"taxonomies" => [""],
 // 		"show_in_graphql" => false,
 // 	];
 
-// 	register_post_type("event", $args);
+// 	register_post_type("model", $args);
 // }
 
-// add_action('init', 'register_event_post_type', 1);
+// add_action('init', 'register_model_post_type', 1);
 #endregion PostTypes

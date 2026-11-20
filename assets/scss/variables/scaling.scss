@@ -3,8 +3,8 @@
  * scaling value should be calculated of (current break point min / next breakpoint min)
  */
 
-$scalingRemDefault: 1; //min-0px -> basic
-// $scalingRemDefault: 1.46565; //min-0px -> project 393
+// $scalingRemDefault: 1; //min-0px -> basic
+$scalingRemDefault: 1.46565; //min-0px -> project 393
 
 /** 
  * use dynamic assign by breakpoints or assign your custom map of 
@@ -30,4 +30,15 @@ $scalingRem: generatedScalingByBreakpoints();
 // 	'xs': 0.89999,   // Base 376px (575.98/ 639.98)
 // 	'sm': 0.625,     // Tailwind 640px (640 / 1023.98) cause next is lg
 // 	'lg': 0.53333,   // Tailwind 1024px (1024 / 1919.98)
+// );
+
+
+/**
+ * Custom by project
+ */
+// $scalingRem:
+// (
+// 	'xs': 1,             // basic project 376 min-0px
+// 	'sm': 0.69,          // basic min-576px
+// 	'lg': 0.516666666,   // basic min-992px
 // );

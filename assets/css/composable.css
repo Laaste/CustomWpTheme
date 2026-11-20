@@ -19,6 +19,9 @@
  * Tailwind like
  */
 /**
+ * Custom by project
+ */
+/**
  * Directions will be prefixed
  * so if prefix is "m" and providing "t" for top will be mt
  * allowed directions are:
@@ -57,6 +60,9 @@
  *
  * If map provided then can be specified default (as "default" or "value" key: numeric value
  */
-.componentexample {
-  background-color: #ffffff;
+.textsection {
+  position: relative;
+  font-size: 16rem;
+  line-height: 1.2;
+  color: #000000;
 }

@@ -58,15 +58,23 @@ $configGenerateFontFamilyClass: false !default;
 	and type-of($src) != 'list'
 	{
 		$srcPath: getSrcPath($fontFamilyName, $src);
+
 		$srcExtension: getFileExtensions($src);
 		$format: getFontFormat($srcExtension);
-		$computed: 'url(\'' + $srcPath + '\')';
+
+		// $computed: 'local(\'' + $fontFamilyName + '\')';
+		// $computed: $computed + ' url(\'' + $srcPath + '\')';
+		// $computed: $computed + ' format(\'' + $format + '\')';
+
+
+		$computed: 'url(\'/wp-content/themes/customtheme/assets/fonts/' + $src + '\')';
 		$computed: $computed + ' format(\'' + $format + '\')';
 
 		@return $computed;
 	}
 	@else
 	{
+		// $computed: ' local(\'' + $fontFamilyName + '\')';
 		$computed: '';
 
 		$iterator: 0;
@@ -121,8 +129,9 @@ $configGenerateFontFamilyClass: false !default;
 		{
 			@font-face
 			{
-				font-family: #{'\'' + $fontFamilyName + '\'' + getSansSerif($font)};
+				font-family: #{'\'' + $fontFamilyName + '\''};
 				src: #{getFontSrc($fontFamilyName, $font)};
+				font-display: swap;
 
 				@if map-has-key($font, 'params')
 				{
